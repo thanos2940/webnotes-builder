@@ -1,0 +1,59 @@
+description = "Final QA — run the full checklist across all chapters, the hub, and the cross-chapter quiz."
+
+prompt = """
+Run the final QA pass for the entire webnotes site.
+
+Steps:
+
+1. Read `_build/STATE.md` to confirm all chapters are in state ✅✅✅✅ (Outline / HTML / Quiz / Reviewer all done).
+   - If any chapter is incomplete, tell the user which and suggest the next command (e.g. `/webnotes-review 4`).
+
+2. Read skills/webnotes-builder/references/07-checklist.md — that's your verification spec.
+
+3. Run through each section of the checklist:
+   - A. Structural checks (index.html, all chapter files, shared assets exist)
+   - B. Per-chapter HTML structure checks
+   - C. Content depth checks
+   - D. Quiz checks (data matches HTML, all options have explanations, etc.)
+   - E. Navigation checks
+   - F. Cross-reference checks (no broken anchor links)
+   - G. Visual rendering checks (suggest the user run `npx serve .` and verify)
+   - H. Interactive quiz check (cross-chapter quiz loads questions)
+   - I. Cleanup (no template placeholders left, no Lorem Ipsum)
+
+4. For each failed check, list it as an issue with:
+   - File involved
+   - What's wrong
+   - Suggested fix
+   - Severity (blocker / minor)
+
+5. If issues found, ask the user: "Should I fix these?" Then fix them one by one, updating STATE.md.
+
+6. If no issues, produce the final user-facing summary (Phase 8 in 01-workflow.md):
+
+```
+✅ Webnotes build complete!
+
+📂 Output:
+   - <N> chapter pages (topic1_*.html ... topicN_*.html)
+   - <X> sections total
+   - <Y> quiz questions total
+   - Cross-chapter quiz at interactive_quiz.html
+
+📊 Fidelity coverage:
+   - Chapter 1: A/A items ✅
+   - Chapter 2: B/B items ✅
+   - ...
+
+🚀 Preview: `npx serve .` then open http://localhost:3000
+
+📝 Known gaps:
+   - <anything you couldn't fully cover, with explanation>
+```
+
+7. Update `_build/STATE.md`:
+   - Mark Phase 6 ✅
+   - Set "Next action" to "Build complete — site ready for use"
+
+Final check: confirm `_build/STATE.md` is updated and clean.
+"""

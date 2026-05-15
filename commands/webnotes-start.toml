@@ -1,0 +1,35 @@
+description = "Kick off the webnotes build — discover source material and propose a chapter plan."
+
+prompt = """
+You are starting a NEW webnotes build for this course directory.
+
+Steps:
+
+1. Read the skill specification fully:
+   - skills/webnotes-builder/SKILL.md
+   - skills/webnotes-builder/references/01-workflow.md  (overall flow)
+   - skills/webnotes-builder/references/08-fidelity.md  (content fidelity)
+   - skills/webnotes-builder/references/09-chunked-execution.md  (multi-session workflow)
+
+2. Run the Discovery phase (Phase 1 in 01-workflow.md):
+   - Glob the workspace for *.pdf, *.md, *.docx, *.tex
+   - Open the first 2-3 pages of each PDF to identify its subject
+   - Detect the language used in the slides
+   - Detect the subject domain (CS / math / algorithms / logic / networking / etc.)
+
+3. Propose a chapter plan:
+   - One chapter per source file (or split very large files)
+   - Suggested slug (lowercase, no spaces)
+   - Estimated section count based on page count
+   - Recommended color theme
+
+4. ASK THE USER to confirm:
+   - The chapter plan
+   - Preferred language for explanations (match source by default)
+   - Depth: terse / standard / encyclopedic
+   - Any topics to emphasize or de-emphasize
+
+5. Wait for the user's confirmation. Do NOT scaffold yet.
+
+After confirmation, the user will say `/webnotes-resume` or scaffolding will proceed.
+"""

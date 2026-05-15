@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+  📝 COURSE HUB TEMPLATE — copy to ../index.html
+  Replace placeholders, then add one <a class="topic-card"> per chapter.
+
+  Required edits:
+    [[LANG]]                - 'el' or 'en'
+    [[COURSE_TITLE]]        - shown in browser tab + h1 ("Algorithms · Course Notes")
+    [[COURSE_LABEL]]        - small hero label ("CS3 · Algorithms")
+    [[COURSE_TAGLINE]]      - one-sentence description
+    [[SEARCH_PLACEHOLDER]]  - placeholder text for the search box
+
+  For each chapter, add a <a class="topic-card"> block (see existing examples below
+  in the body — copy and edit, don't manually construct from scratch).
+
+  The Interactive Quiz card at the end is purple-themed by design — keep it as-is.
+-->
+<html lang="[[LANG]]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[[COURSE_TITLE]]</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/base.css">
+    <style>
+        :root {
+            --bg:#05070a; --surf:#0c0f16; --surf2:#141822; --border:#1e2433;
+            --green:#4ade80; --green-rgb:74,222,128;
+            --blue:#60a5fa;  --purple:#c084fc;
+            --orange:#fb923c; --orange-rgb:251,146,60;
+            --txt:#f1f5f9; --muted:#94a3b8; --dim:#475569;
+        }
+        .hub-hero {
+            padding: 140px 40px 80px;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, rgba(74,222,128,0.05) 0%, transparent 70%);
+        }
+        .hub-hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            background: linear-gradient(to bottom, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hub-hero p {
+            font-size: 1.25rem; color: var(--muted);
+            max-width: 700px; margin: 0 auto 40px;
+        }
+        .search-container { max-width: 500px; margin: 0 auto; position: relative; }
+        .search-container input {
+            width: 100%;
+            background: var(--surf); border: 1px solid var(--border);
+            padding: 1.125rem 1.75rem; border-radius: 6.25rem;
+            color: var(--txt); font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem; outline: none;
+            transition: var(--transition);
+        }
+        .search-container input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 20px rgba(74,222,128,0.1);
+        }
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px; padding: 40px;
+            max-width: 1240px; margin: 0 auto;
+        }
+        .topic-card {
+            background: var(--surf); border: 1px solid var(--border);
+            border-radius: 20px; padding: 32px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .topic-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--green); background: var(--surf2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .topic-card::before {
+            content: ''; position: absolute; top: 0; right: 0;
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, transparent, rgba(var(--green-rgb), 0.05));
+            border-radius: 0 0 0 100%;
+            transition: var(--transition);
+        }
+        .topic-card:hover::before {
+            width: 150px; height: 150px;
+            background: linear-gradient(135deg, transparent, rgba(var(--green-rgb), 0.1));
+        }
+        .topic-num {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--green); font-size: 0.875rem;
+            font-weight: 700; letter-spacing: 2px;
+        }
+        .topic-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem; color: var(--txt); font-weight: 700;
+        }
+        .topic-card p { color: var(--muted); font-size: 1rem; line-height: 1.7; }
+        .topic-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+        .tag {
+            font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+            color: var(--dim); background: rgba(255,255,255,0.03);
+            padding: 0.1875rem 0.625rem; border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+    </style>
+    <script src="js/nav.js" defer></script>
+</head>
+<body>
+    <div id="site-nav"></div>
+
+    <div class="hub-hero">
+        <div class="hero-label">[[COURSE_LABEL]]</div>
+        <h1>[[COURSE_TITLE]]</h1>
+        <p>[[COURSE_TAGLINE]]</p>
+
+        <div class="search-container">
+            <input type="text" id="topic-search" placeholder="[[SEARCH_PLACEHOLDER]]">
+        </div>
+    </div>
+
+    <div class="topics-grid">
+
+        <!-- ─── ONE CARD PER CHAPTER — edit, copy, duplicate as needed ───  -->
+
+        <a href="topic1_<slug>.html" class="topic-card">
+            <div class="topic-num">TOPIC 01</div>
+            <h3>Chapter 1 Title</h3>
+            <p>One-sentence summary of what this chapter covers.</p>
+            <div class="topic-tags">
+                <span class="tag">tag1</span><span class="tag">tag2</span><span class="tag">tag3</span>
+            </div>
+        </a>
+
+        <a href="topic2_<slug>.html" class="topic-card">
+            <div class="topic-num">TOPIC 02</div>
+            <h3>Chapter 2 Title</h3>
+            <p>One-sentence summary.</p>
+            <div class="topic-tags">
+                <span class="tag">tag1</span><span class="tag">tag2</span>
+            </div>
+        </a>
+
+        <!-- ...more chapter cards... -->
+
+        <!-- ─── Interactive Quiz card (keep at end, purple-themed) ─── -->
+        <a href="interactive_quiz.html" class="topic-card" style="border-color: var(--purple); background: linear-gradient(135deg, var(--surf), rgba(192, 132, 252, 0.05));">
+            <div class="topic-num" style="color: var(--purple);">PRACTICE</div>
+            <h3>Interactive Quiz</h3>
+            <p>Δοκίμασε τις γνώσεις σου με ένα διαδραστικό τεστ πολλαπλών επιλογών για όλα τα topics.</p>
+            <div class="topic-tags">
+                <span class="tag">interactive</span><span class="tag">test</span><span class="tag">practice</span>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="footer">[[COURSE_LABEL]] · Course Notes</div>
+</body>
+</html>

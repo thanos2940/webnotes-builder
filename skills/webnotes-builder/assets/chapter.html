@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--
+  📝 CHAPTER TEMPLATE — copy this file to ../topic<N>_<slug>.html
+  Replace every [[PLACEHOLDER]] with chapter-specific content.
+
+  Required edits before saving:
+    [[LANG]]               - 'el' for Greek, 'en' for English (page-level lang attr)
+    [[CHAPTER_TITLE]]      - what appears in browser tab and page title
+    [[ACCENT_COLOR]]       - one of: blue, green, yellow, red, cyan, purple, orange
+                             (this drives the hero gradient & section icon colors)
+    [[ACCENT_DIM]]         - matching dim variant: bdim, gdim, ydim, rdim, cdim, pdim, odim
+    [[ACCENT_HEX]]         - the hex matching ACCENT_COLOR (e.g. #3fb950 for green)
+    [[ACCENT_RGB]]         - the matching --*-rgb value (e.g. 63,185,80)
+    [[HERO_TAGLINE]]       - small text in hero background (e.g. '$ command' or 'O(n log n)')
+    [[COURSE_LABEL]]       - short course tag (e.g. "K24 · Topic N")
+    [[HERO_INTRO]]         - one-paragraph chapter overview
+    [[CHIP_*]]             - keyword chips below the intro
+    [[TOPIC_ID]]           - e.g. "topic6" — must match key in data/questions.js
+    [[FOOTER_TEXT]]        - bottom-of-page label
+
+  Section template repeats N times (one per section). For each section, replace:
+    [[SECTION_ID]]         - unique id (e.g. "mutexes", "prodcons")
+    [[SECTION_NUM]]        - section number (1, 2, 3, ...)
+    [[SECTION_ICON]]       - emoji
+    [[SECTION_TITLE]]      - human-readable title
+    [[SECTION_LEAD]]       - 1-2 sentence intro paragraph
+
+  Drop the comments at the end. See references/04-html-components.md for what to put
+  inside each section body.
+-->
+<html lang="[[LANG]]">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic N · [[CHAPTER_TITLE]]</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/base.css">
+<style>
+:root{
+  --bg:#0d1117;--bg-rgb:13,17,23;--surf:#161b22;--surf2:#1c2230;--border:#30363d;
+  --blue:#58a6ff;--blue-rgb:88,166,255;--bdim:#0d1f40;
+  --green:#3fb950;--green-rgb:63,185,80;--gdim:#0d2218;
+  --yellow:#e3b341;--ydim:#2d2208;
+  --red:#f85149;--rdim:#2d1010;
+  --cyan:#39d4c8;--cdim:#0a2422;
+  --purple:#bc8cff;--purple-rgb:188,140,255;--pdim:#1a1040;
+  --orange:#f0883e;--orange-rgb:240,136,62;--odim:#2d1800;
+  --txt:#e6edf3;--muted:#8b949e;--dim:#6e7681;
+}
+/* ── CHAPTER ACCENT — replace [[ACCENT_HEX]], [[ACCENT_DIM]], [[ACCENT_RGB]] ── */
+.hero{background:linear-gradient(150deg,#0d1117 0%,var(--[[ACCENT_DIM]]) 55%,#0d1117 100%)}
+.hero::after{
+  content:'[[HERO_TAGLINE]]';
+  position:absolute;right:32px;bottom:16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(1rem,3vw,2.2rem);
+  color:rgba([[ACCENT_RGB]],.06);
+  pointer-events:none;font-weight:700;
+}
+
+/* ── SYNTAX HIGHLIGHTING (required if chapter has code) ── */
+.cb{background:#060a10}
+.kw{color:var(--blue);font-weight:600}
+.fn{color:var(--yellow);font-weight:600}
+.st{color:var(--orange)}
+.cm{color:var(--dim);font-style:italic}
+.nm{color:var(--purple)}
+.tp{color:var(--cyan)}
+.mc{color:var(--purple);font-weight:600}
+.pr{color:var(--muted)}
+
+/* ── COMMON HELPER CLASSES ── */
+.struct-box{background:#060a10;border:1px solid var(--border);border-radius:10px;padding:18px 22px;font-family:'JetBrains Mono',monospace;line-height:2}
+.sf-type{color:var(--cyan)}.sf-field{color:var(--txt)}.sf-comment{color:var(--dim);font-style:italic}
+.thread-diagram{background:#060a10;border:1px solid var(--border);border-radius:10px;padding:18px;font-family:'JetBrains Mono',monospace;text-align:center;line-height:2.4}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.good-side{background:var(--gdim);border:1px solid rgba(63,185,80,.2);border-radius:8px;padding:12px}
+.bad-side{background:var(--rdim);border:1px solid rgba(248,81,73,.2);border-radius:8px;padding:12px}
+.side-label{font-size:0.8125rem;font-family:'JetBrains Mono',monospace;letter-spacing:1px;font-weight:700;margin-bottom:0.5rem;text-transform:uppercase}
+.retval-row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.retval{flex:1;min-width:120px;background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.retval-num{font-family:'JetBrains Mono',monospace;font-weight:700;margin-bottom:4px}
+.retval-desc{color:var(--muted)}
+
+/* ── OPTIONAL: Load MathJax for math-heavy chapters (uncomment if needed) ── */
+/* See references/04-html-components.md §17 for MathJax instructions. */
+</style>
+<script src="js/nav.js" defer></script>
+<script src="data/questions.js" defer></script>
+<script src="js/quiz-loader.js" defer></script>
+</head>
+<body>
+<div id="site-nav"></div>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<div class="hero">
+  <div class="hero-label">[[COURSE_LABEL]]</div>
+  <h1>Chapter <em>[[CHAPTER_TITLE]]</em></h1>
+  <p>[[HERO_INTRO]]</p>
+  <div class="chips">
+    <span class="chip">[[CHIP_1]]</span>
+    <span class="chip">[[CHIP_2]]</span>
+    <span class="chip">[[CHIP_3]]</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TABLE OF CONTENTS ═══════════════════════ -->
+<nav class="toc">
+  <a href="#section1">Section 1</a>
+  <a href="#section2">Section 2</a>
+  <!-- add one <a> per section, hrefs must match section ids -->
+</nav>
+
+<div class="wrap">
+
+<!-- ═══════════════════════ SECTION 1 ═══════════════════════ -->
+<section id="section1">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--[[ACCENT_DIM]])">[[SECTION_ICON]]</div>
+    <h2>1. [[SECTION_TITLE]]</h2>
+  </div>
+
+  <p style="color:var(--muted);margin-bottom:14px">
+    [[SECTION_LEAD]]
+  </p>
+
+  <!--
+    Section body. Use components from references/04-html-components.md:
+      - <div class="grid2"> for 2-column layouts
+      - <div class="card"> for content cards
+      - <div class="tip"> for tips/mnemonics
+      - <div class="ibox"> / .wbox / .rbox / .gbox for callouts
+      - <div class="cb">...</div> for code blocks
+      - <table class="vtbl"> for comparison tables
+      - <div class="struct-box"> for struct/data layout visualizations
+      - <div class="thread-diagram"> for ASCII diagrams
+  -->
+
+  <!-- MANDATORY: Per-section quiz placeholder. data-section must match this section's id. -->
+  <div class="section-quiz" data-topic="[[TOPIC_ID]]" data-section="section1"></div>
+</section>
+
+<!-- ═══════════════════════ SECTION 2 ═══════════════════════ -->
+<section id="section2">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--[[ACCENT_DIM]])">[[SECTION_ICON]]</div>
+    <h2>2. [[SECTION_TITLE]]</h2>
+  </div>
+
+  <p style="color:var(--muted);margin-bottom:14px">
+    [[SECTION_LEAD]]
+  </p>
+
+  <!-- body -->
+
+  <div class="section-quiz" data-topic="[[TOPIC_ID]]" data-section="section2"></div>
+</section>
+
+<!-- Add more sections following the same pattern. Aim for 8-14 sections per chapter. -->
+
+</div>
+
+<div class="footer">[[FOOTER_TEXT]]</div>
+</body>
+</html>

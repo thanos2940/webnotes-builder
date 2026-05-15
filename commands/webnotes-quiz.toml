@@ -1,0 +1,48 @@
+description = "Write quiz questions for a chapter — one quiz entry per section in the chapter HTML."
+
+prompt = """
+Write quiz questions for a specific chapter. The user will tell you which chapter number.
+
+Steps:
+
+1. Read `_build/STATE.md` to confirm:
+   - The chapter HTML exists (`topic<N>_<slug>.html`)
+   - If not, tell the user to run `/webnotes-html <N>` first.
+
+2. Read skills/webnotes-builder/references/05-quiz-format.md for the quiz schema and question-writing guidelines.
+
+3. Read the chapter HTML (`topic<N>_<slug>.html`) to find:
+   - The `data-topic="topic<N>"` and `data-section="<id>"` values for each `<div class="section-quiz">` placeholder.
+   - The content of each section (you need to know what to write questions about).
+
+4. Read `data/questions.js` to see existing format and avoid breaking existing entries.
+
+5. For each section in the chapter, write 1-3 questions:
+   - **Question types:** definition recall, mechanism/behavior, compare-contrast, diagnose, apply
+   - **Distractors must be plausible misconceptions** — see 05-quiz-format.md §3.2
+   - **Every option needs an explanation** including wrong ones
+   - **Exactly one option per question has `correct: true`**
+   - Match the chapter's language for question text + explanations
+
+6. Append (don't overwrite) the new topic block to `data/questions.js`:
+   ```js
+   window.quizData["topic<N>"] = {
+     "<section_id>": {
+       "title": "Section Title",
+       "questions": [ /* 1-3 questions */ ]
+     },
+     ...
+   };
+   ```
+
+7. Verify: every `data-section` in the HTML has a matching entry in questions.js, and vice versa.
+
+8. Update `_build/STATE.md`:
+   - Mark Quiz ✅ for this chapter
+   - Set "Next action" to: "Reviewer pass for chapter <N> (run /webnotes-review <N>)"
+
+9. Tell the user:
+   - Number of questions added
+   - Total questions in the chapter
+   - What to ask next: `/webnotes-review <N>` (DO NOT skip the reviewer pass)
+"""

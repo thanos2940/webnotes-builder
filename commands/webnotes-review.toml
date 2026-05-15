@@ -1,0 +1,68 @@
+description = "Reviewer pass — re-read the source PDF and verify the chapter HTML covers everything."
+
+prompt = """
+Run the MANDATORY reviewer pass for a specific chapter. The user will tell you which chapter number.
+
+This is the most important command — it's how we guarantee content fidelity.
+
+Steps:
+
+1. Read `_build/STATE.md` to confirm:
+   - The chapter HTML exists and quiz is done
+   - The fidelity checklist exists (`_build/topic<N>_fidelity.md`)
+   - If not, tell the user what's missing.
+
+2. Read skills/webnotes-builder/references/10-reviewer-pass.md for the full protocol.
+
+3. CLEAR YOUR REASONING — pretend you've never seen this chapter's HTML before.
+   - Don't rely on your memory of what's in the HTML
+   - Don't trust the fidelity checklist alone; the source might contain items not yet on it
+
+4. Re-read the source PDF for this chapter FROM SCRATCH (all pages, like in the outline phase).
+
+5. Read the generated HTML (`topic<N>_<slug>.html`) as if you were a student.
+
+6. Read the fidelity checklist (`_build/topic<N>_fidelity.md`).
+
+7. Verification loop:
+   a. For each checklist item: grep the HTML, verify it's present. Tick if found, leave if not.
+   b. For each section in the source PDF: read it, then scan the corresponding HTML section. Note anything in the PDF that's missing or under-explained in the HTML — even if not on the checklist.
+   c. Also check for non-fidelity issues:
+      - Broken links between chapters
+      - Quiz/HTML section ID mismatches
+      - Color theme consistency
+      - Code highlighting class usage
+
+8. For every issue found:
+   - Edit the HTML to add/expand the missing content
+   - Use the same components and color theme as the rest of the chapter
+   - Tick the corresponding checklist item
+
+9. After patching, re-verify with grep that every fidelity item is now present.
+
+10. Update `_build/STATE.md`:
+    - Mark Reviewer ✅ for this chapter
+    - Add a Note column entry like: "Added 3 missing operators + 1 warning in §6"
+    - Set "Next action" appropriately:
+      * If more chapters remain: "Outline chapter <N+1> (run /webnotes-outline <N+1>)"
+      * If all chapters done: "Run /webnotes-checklist for final QA"
+
+11. Tell the user with COVERAGE STATS:
+    ```
+    ✅ Chapter <N> reviewer pass complete
+
+    📊 Coverage:
+       - Concepts: X/X
+       - Code listings: X/X
+       - Warnings: X/X
+       - Examples: X/X
+       - (etc — domain-specific buckets)
+
+    🔧 Changes made:
+       - <list of additions/expansions>
+
+    🔜 Next: <next action>
+    ```
+
+This is the difference between "the agent wrote something" and "the student got the full course." Do not skip.
+"""
