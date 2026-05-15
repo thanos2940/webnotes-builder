@@ -32,14 +32,14 @@ For a 6-chapter course: ~30 sessions spread over days. The slash commands tell y
 ### Option 1 — Install from a public repo
 
 ```bash
-gemini extensions install https://github.com/thanos2940/webnotes
+gemini extensions install https://github.com/thanos2940/webnotes-builder
 gemini extensions list  # verify
 ```
 
 ### Option 2 — Link a local copy (for development or single-user use)
 
 ```bash
-git clone (https://github.com/thanos2940/webnotes) webnotes-builder
+git clone https://github.com/thanos2940/webnotes-builder webnotes-builder
 cd webnotes-builder
 gemini extensions link .
 ```
