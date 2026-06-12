@@ -36,10 +36,11 @@ Everything generated goes to the **parent directory** of `webnotes-skill/`. Neve
 
 | Output | Path |
 |---|---|
-| Chapter HTML | `../topic<N>_<slug>.html` |
+| Chapter HTML | `../topic<N>_<slug>.html` (workspace root, next to index.html) |
 | Course hub | `../index.html` |
+| Exam prep page | `../exam_prep.html` (if exam material exists — see `references/11-exam-prep.md`) |
 | Cross-chapter quiz | `../interactive_quiz.html` |
-| Shared CSS | `../styles/base.css`, `../styles/quiz.css` (copy from `assets/`) |
+| Shared CSS | `../styles/{base,layout,components,quiz}.css` (copy all four from `assets/`) |
 | Shared JS | `../js/nav.js`, `../js/quiz-loader.js`, `../js/interactive_quiz.js` |
 | Quiz data | `../data/questions.js` |
 | Build state | `../_build/STATE.md` (track multi-session progress) |

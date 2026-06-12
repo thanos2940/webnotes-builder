@@ -24,7 +24,13 @@ Before anything else:
 
 1. `Glob` parent directory for: `*.pdf`, `*.md`, `*.docx`, `*.tex`, common note formats.
 2. List what you found, grouped logically (e.g. `slides/` folder vs loose files).
-3. Identify any **existing webnotes output** (e.g. previous `topic1_*.html`) — you may be updating, not greenfield-ing.
+3. Identify **exam material**: `exams/`, `past-papers/`, `assignments/`, exercise files,
+   photos of exam papers — if any exist, plan an Exam Prep phase (`11-exam-prep.md`).
+4. Identify any **existing webnotes output** (e.g. previous `topic1_*.html`, `index.html`,
+   `styles/`) — if found, this is an **ENHANCE run**: audit the existing pages against the
+   skill's standard (component usage, depth vs source, per-section quizzes, exam prep,
+   responsive rendering) and produce a gap list instead of a greenfield chapter plan.
+   Never regress or delete content the site already has.
 
 ### Output
 
@@ -100,17 +106,19 @@ Show this plan to the user, ask: "Should I proceed with this structure? Want any
 
 ### Actions
 
-1. Copy `assets/styles/base.css` → `../styles/base.css`
+1. Copy ALL FOUR stylesheets `assets/styles/{base,layout,components,quiz}.css` → `../styles/`
 2. Copy `assets/js/nav.js` → `../js/nav.js`
 3. Copy `assets/js/quiz-loader.js` → `../js/quiz-loader.js`
-4. Copy `assets/data/questions.js` → `../data/questions.js` (starts as empty stub)
-5. Create `../index.html` from `assets/index.html`:
+4. Copy `assets/js/interactive_quiz.js` → `../js/interactive_quiz.js`
+5. Copy `assets/data/questions.js` → `../data/questions.js` (starts as empty stub)
+6. Create `../index.html` from `assets/index.html`:
    - Fill in course title, hero subtitle
-   - Add ONE `<a class="topic-card">` per planned chapter (link target = `topic<N>_<slug>.html`, even if file doesn't exist yet)
-   - Add Interactive Quiz card at end
-6. Edit `../js/nav.js`:
-   - Populate the `topics` array with one entry per chapter
-7. Optionally create `../interactive_quiz.html` from `assets/interactive-quiz.html` (works even with empty quiz data — fills as you build chapters).
+   - Add ONE `<a class="topic-card">` per planned chapter (link target = `topic<N>_<slug>.html`
+     at the workspace root, even if the file doesn't exist yet)
+   - Add the Exam Prep card (orange) if exam material exists, then the Interactive Quiz card at end
+7. Edit `../js/nav.js`:
+   - Populate the `topics` array with one entry per chapter (pick a fitting `SVG_ICONS.*` each)
+8. Optionally create `../interactive_quiz.html` from `assets/interactive-quiz.html` (works even with empty quiz data — fills as you build chapters).
 
 ### Verification
 
@@ -136,7 +144,7 @@ Open the PDF and read it **page by page**. For a 80-page deck, this takes ~3-5 t
 - Definition (term + statement)
 - Code listing (transcribe exactly)
 - Pseudocode
-- Diagram (describe so you can recreate as ASCII)
+- Diagram (describe so you can recreate as inline SVG or CSS shapes)
 - Worked example
 - Warning / prohibition / "be careful"
 - Table / comparison
@@ -150,7 +158,7 @@ Write each into the outline AND into the fidelity checklist (one checkbox per it
 #### 5.B — HTML session (write the page)
 
 **Input:** `../_build/topic<N>_outline.md`, `../_build/topic<N>_fidelity.md`, `assets/chapter.html`
-**Output:** `../topic<N>_<slug>.html`
+**Output:** `../topic<N>_<slug>.html` (workspace ROOT, next to index.html — `_build/` holds state only)
 
 Steps:
 1. Pick a chapter accent color (see `03-design-system.md` §2). Don't reuse what siblings use.
@@ -193,7 +201,25 @@ Do not attempt all 5 sub-sessions in one tool-call run. Context bloat → qualit
 
 ---
 
-## Phase 6 — Cross-chapter quiz wiring
+## Phase 6 — Exam prep (when exam material exists)
+
+After all chapters are reviewed, if Discovery found past exams / assignments / exercises:
+
+1. Read `references/11-exam-prep.md` in full — it's the complete spec.
+2. Extract exam material → `_build/examprep_outline.md` + `_build/examprep_fidelity.md`,
+   group questions into exercise families, confirm the family list with the user.
+3. Build `exam_prep.html` (format/strategy, theory-flash, one solved section per family,
+   trace drills, assignments bridge) — respecting the two golden rules: no dated exam
+   references, no references to the student's specific implementation.
+4. Add `"examprep"` quiz data, 🎯 Exam Focus boxes in mapped chapter sections,
+   nav entry + orange hub card.
+
+This phase is its own session (or two for rich material). Skip ONLY if no exam-related
+material exists and the user doesn't want a generic version.
+
+---
+
+## Phase 7 — Cross-chapter quiz wiring
 
 After all chapters are done:
 
@@ -203,13 +229,13 @@ After all chapters are done:
 
 ---
 
-## Phase 7 — Final QA
+## Phase 8 — Final QA
 
 Run through `references/07-checklist.md`. Every box ticked = ship.
 
 ---
 
-## Phase 8 — Summary to user
+## Phase 9 — Summary to user
 
 Final message:
 
@@ -220,7 +246,7 @@ Final message:
    - Shared assets in styles/, js/, data/
 
 📂 Output: ./
-🚀 Preview: npx serve . (then http://localhost:3000)
+🚀 Preview: npm run dev (then http://localhost:3000)
 
 🧠 Coverage: All 6 source PDFs covered. Notable depth points:
    - Topic 3 includes 4 simulations

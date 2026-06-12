@@ -12,7 +12,7 @@ You are not a transcriber. You are a **textbook author** who is converting a pro
 - **Expand** when slides are terse — a bullet "fork() copies address space" becomes 2 paragraphs explaining copy-on-write.
 - **Compress** when slides repeat — combine 4 slides on "what is a pipe" into one tight section.
 - **Add** mnemonics, exam tips, common-misconception warnings — the slides won't have these; you need to invent them based on what students typically struggle with.
-- **Translate visuals** — every diagram in the PDF becomes an ASCII art block or table in your output.
+- **Translate visuals** — every diagram in the PDF becomes an inline SVG or a clean CSS/HTML layout in your output (no ASCII art).
 
 ---
 
@@ -81,17 +81,7 @@ Output: rewrite cleanly into a `.cb` block with syntax highlighting. **Fix obvio
 
 Source: a slide with a box-and-arrow diagram.
 
-Output: ASCII recreation in a `.thread-diagram` or `.struct-box` div. If too complex for ASCII, use inline SVG.
-
-```
-┌──────────────────────────────┐
-│ Code (Text)    ← shared      │
-│ Global Data    ← shared      │
-│ Heap (malloc)  ← shared      │
-├──────────────────────────────┤
-│ Stack T1 │ Stack T2 │ Stack T3│
-└──────────────────────────────┘
-```
+Output: Recreate as a responsive inline SVG using theme tokens (`var(--blue)`, `var(--surf)`, etc.) or as a structured CSS grid. Do NOT use ASCII art or text-based box drawings.
 
 ### 4.4 Comparison tables
 
@@ -152,7 +142,7 @@ The source professor is the authority. If you're sure they have an error, add a 
 ### PDF slides (LaTeX-beamer style)
 
 - Heavy on bullet points → expand each bullet into 1–2 sentences of prose.
-- Diagrams are often vectorial — describe them in text + recreate as ASCII.
+- Diagrams are often vectorial — describe them in text + recreate as SVG/CSS.
 - Code is usually present and important — transcribe carefully.
 
 ### PDF lecture notes (paragraph form)
@@ -189,7 +179,7 @@ Look for: system call signatures, struct layouts, race condition examples, proce
 
 ### Algorithms
 
-Look for: pseudocode (transcribe to `.cb` blocks), complexity claims (build a `vtbl`), worked execution traces (ASCII step-by-step), recurrence relations (use MathJax if you load it).
+Look for: pseudocode (transcribe to `.cb` blocks), complexity claims (build a `vtbl`), worked execution traces (step-by-step table or CSS grid), recurrence relations (use MathJax if you load it).
 
 ### Mathematics
 

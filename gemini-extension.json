@@ -1,7 +1,7 @@
 {
   "name": "webnotes-builder",
-  "version": "1.1.0",
-  "description": "Converts a folder of course material (PDF slides, markdown, lecture handouts) into a complete interactive HTML study site — one chapter page per source file, with per-section quizzes, annotated code, ASCII diagrams, and a cross-chapter test. Includes content-fidelity guarantees so nothing from the source is silently dropped, and a chunked multi-session workflow with state persistence. Works for CS, math, algorithms, networking, databases, logic programming, and other technical subjects.",
+  "version": "1.2.0",
+  "description": "Converts a folder of course material (PDF slides, markdown, past exams, assignments) into a complete interactive HTML study site — one chapter page per source file, with per-section quizzes, annotated code, CSS diagrams, an exam-prep page (solved exam-style exercises, theory flash-cards, trace drills), and a cross-chapter test. Can also enhance an existing webnotes site to this standard. Includes content-fidelity guarantees so nothing from the source is silently dropped, and a chunked multi-session workflow with state persistence. Works for CS, math, algorithms, networking, databases, logic programming, and other technical subjects.",
   "author": "K24 student community",
   "license": "MIT",
   "homepage": "https://github.com/your-org/webnotes-builder",

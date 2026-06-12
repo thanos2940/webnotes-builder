@@ -37,7 +37,7 @@ cp -r webnotes-builder ~/.gemini/extensions/
 ```bash
 gemini
 > /extensions list
-# Should show: "webnotes-builder  v1.1.0  enabled"
+# Should show: "webnotes-builder  v1.2.0  enabled"
 
 > /skills list
 # Should show: "webnotes-builder  Converts a folder of course material..."

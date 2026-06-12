@@ -19,7 +19,9 @@ Steps:
    - F. Cross-reference checks (no broken anchor links)
    - G. Visual rendering checks (suggest the user run `npx serve .` and verify)
    - H. Interactive quiz check (cross-chapter quiz loads questions)
-   - I. Cleanup (no template placeholders left, no Lorem Ipsum)
+   - I. Exam prep checks (exam_prep.html complete, no dated exam references, no
+        student-implementation references, Exam Focus boxes link correctly)
+   - J. Cleanup (no template placeholders left, no Lorem Ipsum)
 
 4. For each failed check, list it as an issue with:
    - File involved
@@ -29,7 +31,7 @@ Steps:
 
 5. If issues found, ask the user: "Should I fix these?" Then fix them one by one, updating STATE.md.
 
-6. If no issues, produce the final user-facing summary (Phase 8 in 01-workflow.md):
+6. If no issues, produce the final user-facing summary (Phase 9 in 01-workflow.md):
 
 ```
 ✅ Webnotes build complete!

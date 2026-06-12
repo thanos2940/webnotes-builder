@@ -16,15 +16,22 @@ Steps:
    - Open the first 2-3 pages of each PDF to identify its subject
    - Detect the language used in the slides
    - Detect the subject domain (CS / math / algorithms / logic / networking / etc.)
+   - Detect EXAM MATERIAL: exams/, past-papers/, assignments/, exercise files —
+     these feed the exam_prep.html page (references/11-exam-prep.md)
+   - Detect an EXISTING webnotes site (topic*.html, index.html, styles/, data/questions.js).
+     If found, this is an ENHANCE run, not a greenfield build: audit the existing pages
+     against the skill's standard (components, depth, per-section quizzes, exam prep,
+     responsive CSS) and propose an upgrade plan instead of a from-scratch plan.
 
-3. Propose a chapter plan:
-   - One chapter per source file (or split very large files)
-   - Suggested slug (lowercase, no spaces)
-   - Estimated section count based on page count
-   - Recommended color theme
+3. Propose a plan:
+   - CREATE mode: one chapter per source file (or split very large files), suggested slug
+     (lowercase, no spaces), estimated section count based on page count, recommended
+     color theme — plus an Exam Prep phase if exam material was found
+   - ENHANCE mode: per-page gap list (missing sections vs source, missing quizzes,
+     missing exam prep, styling drift) ordered by impact
 
 4. ASK THE USER to confirm:
-   - The chapter plan
+   - The plan (chapter plan or upgrade plan)
    - Preferred language for explanations (match source by default)
    - Depth: terse / standard / encyclopedic
    - Any topics to emphasize or de-emphasize

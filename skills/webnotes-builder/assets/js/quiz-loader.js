@@ -1,7 +1,7 @@
 // quiz-loader.js — loads questions from window.quizData and renders them per section
-(function() {
+(function () {
     console.log('Quiz loader starting...');
-    
+
     // Function to render quizzes
     function renderQuizzes() {
         const db = window.quizData;
@@ -31,7 +31,7 @@
 
             questions.forEach((qObj, index) => {
                 const qId = `q-${topicId}-${sectionId}-${index}`;
-                
+
                 let answerText = "Λείπει η απάντηση";
                 if (qObj.options) {
                     const correctOpt = qObj.options.find(o => o.correct);
