@@ -8,9 +8,16 @@ If the user asks anything like:
 - "Build course notes" / "Create webnotes" / "Generate study guide"
 - "Φτιάξε σημειώσεις από τα slides"
 - "Make interactive notes from these PDFs"
+- "Add exam prep" / "Φτιάξε σελίδα για την εξεταστική"
+- "Upgrade/enhance my existing webnotes site"
 - Or invokes any `/webnotes-*` slash command
 
 …then activate the `webnotes-builder` skill.
+
+The skill has TWO modes, decided in Discovery:
+- **CREATE** — no webnotes exist yet: full pipeline (scaffold → chapters → exam prep → QA)
+- **ENHANCE** — `topic*.html`/`index.html` already exist: audit the site against the
+  skill's standard and upgrade the gaps in place (never regress existing content)
 
 ## Critical reading order
 
@@ -27,8 +34,9 @@ Before generating ANY HTML, read these files (in this order):
 1. **Content fidelity** — every concept, operator, warning, example, definition from the source MUST appear in the output. Never silently omit. Build a fidelity checklist before writing HTML.
 2. **One work item per session** — outline → HTML → quiz → reviewer pass, each in a separate session. Track state in `_build/STATE.md`.
 3. **Reviewer pass is mandatory** — after drafting a chapter, re-read the source PDF and verify every fidelity item is covered. Patch missing items.
-4. **Confirm before generating** — discovery phase produces a plan; wait for user approval before scaffolding.
-5. **Output goes to the parent directory** (the user's course folder), NOT inside this extension folder.
+4. **Exam prep when material exists** — past exams / assignments / exercises feed `exam_prep.html` (solved exercise families, theory-flash, trace drills, assignments bridge) plus 🎯 Exam Focus boxes in the chapters. See `skills/webnotes-builder/references/11-exam-prep.md`. Two golden rules there: present everything as GENERIC exercises (no "this fell in June 2025"), and never reference the student's specific implementation — patterns + your own annotated sample code only.
+5. **Confirm before generating** — discovery phase produces a plan; wait for user approval before scaffolding.
+6. **Output goes to the parent directory** (the user's course folder), NOT inside this extension folder. Chapter pages live at the workspace ROOT next to index.html; `_build/` holds only state/outlines.
 
 ## Slash commands available
 
@@ -39,6 +47,7 @@ Before generating ANY HTML, read these files (in this order):
 - `/webnotes-html <N>` — write HTML for chapter N from outline
 - `/webnotes-quiz <N>` — write quiz questions for chapter N
 - `/webnotes-review <N>` — reviewer pass for chapter N (re-read source, fill gaps)
+- `/webnotes-examprep` — build/enhance exam_prep.html from past exams + assignments
 - `/webnotes-checklist` — run final QA across all chapters
 
 Each command's prompt template is in `commands/*.toml` and explicitly instructs you which files to read.

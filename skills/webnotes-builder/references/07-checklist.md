@@ -7,12 +7,13 @@
 ## A. Structural checks
 
 - [ ] `index.html` exists at parent dir root
-- [ ] One `topic<N>_<slug>.html` per chapter, names match `index.html` links
+- [ ] One `topic<N>_<slug>.html` per chapter AT THE ROOT (next to index.html), names match `index.html` links
+- [ ] `exam_prep.html` exists if exam material was found (see `11-exam-prep.md` §12 for its own checklist)
 - [ ] `interactive_quiz.html` exists
-- [ ] `styles/base.css` exists and is the unmodified copy from templates
-- [ ] `js/nav.js` exists, includes ALL chapters in its `topics` array
+- [ ] All four stylesheets exist: `styles/base.css`, `styles/layout.css`, `styles/components.css`, `styles/quiz.css`
+- [ ] `js/nav.js` exists, includes ALL chapters in its `topics` array (+ examprep + quiz entries)
 - [ ] `js/quiz-loader.js` exists and is the unmodified copy from templates
-- [ ] `data/questions.js` exists and has data for every chapter
+- [ ] `data/questions.js` exists and has data for every chapter (+ `examprep` if the page exists)
 
 Verify with:
 ```bash
@@ -27,7 +28,7 @@ For EACH chapter HTML file:
 
 - [ ] `<!DOCTYPE html>` declared
 - [ ] Title in `<head>` describes the chapter
-- [ ] Three font links + base.css link in `<head>`
+- [ ] Font link + base.css/layout.css/components.css links in `<head>` (root-relative paths)
 - [ ] Chapter accent color set in `<style>` block (hero gradient)
 - [ ] Syntax highlight classes (`.kw`, `.fn`, ...) defined in `<style>` if code is used
 - [ ] `<div id="site-nav"></div>` at start of `<body>`
@@ -45,7 +46,7 @@ For EACH chapter HTML file:
 - [ ] Code blocks use `.cb` with syntax classes (no plain `<pre>`)
 - [ ] At least one `.tip`, `.ibox`, `.wbox`, `.rbox`, or `.gbox` per chapter
 - [ ] At least one `.vtbl` table per chapter (for comparison content)
-- [ ] At least one ASCII diagram or SVG per chapter (for visual concepts)
+- [ ] At least one SVG diagram or structured CSS shape per chapter (for visual concepts)
 - [ ] Strong terms styled with accent colors on first introduction
 
 ---
@@ -111,7 +112,22 @@ Open in browser (or use Preview tool):
 
 ---
 
-## I. Cleanup
+## I. Exam prep checks (if exam material exists)
+
+- [ ] `exam_prep.html` covers: format/strategy, theory-flash, one solved section per
+      exercise family, trace drills, assignments bridge
+- [ ] NO dated/attributed exam references anywhere (grep for years, "εξέταση 20",
+      semester names, percentage weights in statement labels)
+- [ ] NO references to the student's specific assignment code / file / function names
+- [ ] Trace drill toggles work (unique `tq*` ids)
+- [ ] `examprep` quiz data present; no console warnings on the page
+- [ ] 🎯 Exam Focus boxes exist in the mapped chapter sections; their links resolve to
+      real `exam_prep.html#anchor` targets
+- [ ] `_build/examprep_fidelity.md` fully ticked
+
+---
+
+## J. Cleanup
 
 - [ ] No template placeholder strings left (e.g. `"REPLACE_ME"`, `"TODO"`)
 - [ ] No `console.log` statements in shipped JS (unless intentional debugging)
@@ -121,7 +137,7 @@ Open in browser (or use Preview tool):
 
 ---
 
-## J. Summary message to user
+## K. Summary message to user
 
 Final user-facing message must include:
 
@@ -163,7 +179,7 @@ Example:
 | Nav bar empty | nav.js didn't run; check `<script src="js/nav.js" defer>` |
 | Code blocks look like plain text | missing syntax highlighting `<style>` block in chapter, or wrong class names |
 | Hero looks wrong (no gradient) | `<style>` block forgot the `.hero` override |
-| Page has no styling | `<link rel="stylesheet" href="styles/base.css">` path wrong (e.g. `./styles/` vs `styles/`) |
+| Page has no styling | `<link rel="stylesheet" href="styles/base.css">` path wrong, or layout/components.css missing |
 | MathJax not rendering | script tags out of order or `\(`/`\)` not escaped properly in HTML |
 
 If you hit any of these, debug then re-check this list.

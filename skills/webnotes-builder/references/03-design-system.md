@@ -104,27 +104,29 @@ Place this at the top of every chapter HTML, just below the shared CSS link:
 
 ## 3. Typography
 
-Three fonts, loaded via Google Fonts:
+Fonts loaded via Google Fonts (or imported in `base.css`):
 
 | Font | Use | Weights |
 |---|---|---|
-| **Lora** (serif) | Body text | 400, 600, italic 400 |
-| **Syne** (display) | Hero H1, section titles | 400, 700, 800 |
+| **Roboto** (sans-serif) | Body text | 400, 500, 700 |
+| **Google Sans / Roboto** | Headings, titles, and structural labels | 700, 800 |
 | **JetBrains Mono** | Code, terminal output, monospace UI | 400, 600, 700 |
+| **Syne** (display) | Hub Hero H1 title | 400, 700, 800 |
 
-Loaded via:
+Loaded via `@import` in `base.css` or `<link>` in templates:
 
 ```html
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 ```
 
 ### Size scale
 
-Body base: `1.0625rem` (~17px). Line height: `1.8`.
-H1 (hero): `clamp(2.5rem, 6vw, 4rem)`.
-H2 (section): `1.75rem`.
-H3: `1.25rem`.
-Code: `0.8–0.85rem`.
+Body base: `1.09rem` (~17.4px). Line height: `1.88`.
+H1 (hero): `clamp(1.8rem, 5vw, 3rem)`.
+H2 (section): `1.35rem`.
+H3: `1.55rem`.
+H4: `1.3rem`.
+Code: `0.94rem`. Line height: `1.85`.
 
 ---
 
@@ -142,15 +144,14 @@ Loosely based on 8px grid:
 ## 5. Layout
 
 ```
-┌──────────────────────────────────────────┐
-│  Fixed nav bar (60px height)             │  ← shared via nav.js
+│  Fixed nav bar (72px height)             │  ← shared via nav.js
 ├──────────────────────────────────────────┤
 │  Hero (full-width, gradient, 200–300px)  │  ← per-chapter color
 ├──────────────────────────────────────────┤
 │  TOC (sticky, full-width, ~80px)         │  ← anchor links
 ├──────────────────────────────────────────┤
 │                                          │
-│  <main class="wrap"> max-width 1160px    │
+│  <main class="wrap" style="text-align:left">
 │                                          │
 │    <section> 1 of N                      │
 │    <section> 2 of N                      │
@@ -161,7 +162,7 @@ Loosely based on 8px grid:
 └──────────────────────────────────────────┘
 ```
 
-The `.wrap` container has `max-width: 1160px; margin: 0 auto; padding: 0 24px`. Everything section-level lives inside it.
+The `.wrap` container has `max-width: 1160px; margin: 0 auto; padding: 0 24px`. **All content must be left-aligned** to ensure readability. Avoid `text-align: center` for educational content.
 
 ---
 
@@ -202,7 +203,7 @@ These classes are defined in `base.css`. **Do not redefine.** Just use:
 | `.cb` | Code block | nearly-black bg, mono |
 | `.struct-box` | Struct visualization | mono, bordered |
 | `.compare` + `.good-side` / `.bad-side` | Side-by-side comparison | 2-column with colors |
-| `.thread-diagram` / `.fd-diagram` | ASCII diagram container | mono, centered |
+| `.thread-diagram` / `.fd-diagram` | SVG / code trace diagram container | mono, centered |
 | `.chip` | Topic tag chip | small rounded label |
 | `.retval-row` + `.retval` | Return-value callouts | horizontal cards |
 
@@ -242,14 +243,19 @@ Built in to the components. Test by resizing browser to 375px width. Common adju
 
 ---
 
-## 10. Dark mode only (no light theme)
+## 10. Light and Dark Theme System
 
-We intentionally do NOT support light mode. Reason:
-1. Easier on the eyes for long study sessions
-2. Code highlighting works much better on dark
-3. Less testing surface
+We fully support both Light and Dark modes. The system uses a global theme toggle and a set of transition and high-specificity override rules inside `base.css`:
 
-If a user demands light mode, they can extend the CSS — but it's not in scope.
+1. **Root Variables Overrides**: 
+   All colors (`--bg`, `--surf`, `--border`, `--txt`, `--muted`, `--dim`, and accent variables like `--blue` and `--green`) are overridden under `html[data-theme="light"]` to use a high-contrast light scheme.
+2. **Transition Rules**: 
+   Smooth theme transitions are applied to all components (such as `section`, `p`, code blocks, inputs, and SVG nodes) via:
+   `transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ...`
+3. **Component Refinements**: 
+   Specific classes (e.g. code block backgrounds `.cb`, syntax keywords `.kw`/`.fn`/`.st`, list commentary, trees, and custom quiz elements) have light mode-specific overrides.
+4. **Theme Toggle Button**: 
+   A floating `.theme-toggle` button is dynamically appended to the navigation links (initialized via `nav.js` and styled in `base.css`) showing `☀️` or `🌙` to let users toggle the mode.
 
 ---
 

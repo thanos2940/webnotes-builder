@@ -140,9 +140,10 @@ For each chapter, **5 separate sessions** is the gold standard:
 ### Session B — HTML draft
 
 **Input:** Outline + fidelity checklist + `assets/chapter.html` template
-**Action:** Write `topicN_<slug>.html` in parent dir. Tick fidelity items as you include them.
+**Action:** Write `topicN_<slug>.html` at the WORKSPACE ROOT (next to index.html —
+`_build/` holds only outlines/state). Tick fidelity items as you include them.
 
-**Output:** One HTML file
+**Output:** One HTML file at the workspace root
 **Time:** ~60-90 min
 
 ### Session C — Quiz
@@ -168,6 +169,18 @@ For each chapter, **5 separate sessions** is the gold standard:
 **Output:** Final HTML
 
 **Time:** ~30 min
+
+### Exam-prep sessions (after ALL chapters are reviewed)
+
+If the workspace has past exams / assignments / exercises, run 1–2 extra sessions per
+`references/11-exam-prep.md`:
+
+- **EP-1 (outline):** extract exam material → `_build/examprep_outline.md` +
+  `_build/examprep_fidelity.md`, group questions into exercise families, confirm with user.
+- **EP-2 (build):** write `exam_prep.html`, add `examprep` quiz data, place 🎯 Exam Focus
+  boxes in mapped chapter sections, wire nav + hub card.
+
+**Time:** ~60-120 min total. Track as its own phase row in STATE.md.
 
 ### Time budget per chapter
 
@@ -209,7 +222,7 @@ Then rebuild STATE.md from this evidence.
 
 ### Q: User wants to redo Chapter 3
 
-Edit STATE.md: set Chapter 3 row to all ❌. Delete `_build/topic3_*` files. Delete `topic3_<slug>.html`. Optionally remove `"topic3"` key from `data/questions.js`. Restart from Session A for Chapter 3.
+Edit STATE.md: set Chapter 3 row to all ❌. Delete `_build/topic3_*` files. Optionally remove `"topic3"` key from `data/questions.js`. Restart from Session A for Chapter 3.
 
 ### Q: Multiple users / agents collaborating
 

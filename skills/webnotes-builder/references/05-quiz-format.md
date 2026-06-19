@@ -233,16 +233,13 @@ The `data-topic="topic6"` must match the `"topic6"` key in `window.quizData`, an
 
 ---
 
-## 8. Interactive (cross-chapter) quiz behavior
-
-`interactive_quiz.html` shows all questions from all topics, randomized, with:
-- Radio buttons (single selection)
-- Submit button
-- Per-question correct/wrong marker after submit
-- Total score at end
-- Per-question explanation reveal
-
 It auto-pulls from `data/questions.js` — no separate data needed.
+
+### 8.1 Mandatory Navigation
+The interactive quiz interface MUST provide the following navigation controls to the user:
+- **Προηγούμενη (Previous)**: Allows the user to return to the previous question (enabled if index > 0).
+- **Επόμενη (Next)**: Allows the user to move to the next question immediately, even if they haven't answered yet.
+- **Card Mode**: These buttons must be persistent in the single-question view.
 
 For details on its rendering logic, see `assets/interactive-quiz.html`.
 

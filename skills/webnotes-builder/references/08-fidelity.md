@@ -18,7 +18,7 @@
 | Prohibition / "Don't do X" | Preserved as explicit anti-pattern |
 | Example (worked) | Included in full |
 | Table / comparison | Preserved as `<table class="vtbl">` |
-| Diagram | Recreated as ASCII or SVG |
+| Diagram | Recreated as inline SVG or CSS shapes (no ASCII art) |
 | Operator / function / keyword list | Every entry preserved |
 | Historical note / aside | Included as `.ibox` (lighter weight OK) |
 | Bibliographic reference | Listed in footer or section note |

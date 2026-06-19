@@ -1,6 +1,6 @@
 # 06 — Interactivity: Diagrams, Animations, Simulations
 
-> When to escalate from prose → ASCII art → SVG → animated SVG → full Canvas simulation. Choose the lightest tool that works.
+> When to escalate from prose → HTML/CSS layout → static SVG → full Canvas simulation. Choose the lightest tool that works.
 
 ---
 
@@ -12,81 +12,38 @@ For each concept you're explaining, ask:
 Is the concept visual?
 ├─ No  → prose + maybe a table
 └─ Yes → Can it be conveyed statically?
-         ├─ Yes → Is it simple geometry?
-         │       ├─ Box-and-arrow → ASCII art (.thread-diagram)
-         │       ├─ Hierarchical (tree) → ASCII tree
-         │       ├─ Tabular → <table class="vtbl">
-         │       └─ Anything else → inline SVG
+         ├─ Yes → Is it tabular? → <table class="vtbl">
+         │       └─ Otherwise → HTML/CSS layout (preferred) / inline SVG
          │
          └─ No  → Does it require animation or randomness?
-                 ├─ Animation only → SVG with CSS animation OR
+                 ├─ Animation only → CSS animation OR
                  │                   a 5-line vanilla-JS canvas loop
                  ├─ User parameter exploration → small interactive
                  │                                widget (input → render)
                  └─ Complex (full simulation) → only if the concept
-                                                truly demands it
+                                                 truly demands it
 ```
 
-**Default to the lightest option.** Adding a 200-line Canvas simulation for a concept that's clear from ASCII is over-engineering.
+**Default to the lightest option.** Adding a 200-line Canvas simulation for a concept that's clear from a static HTML/CSS layout is over-engineering.
 
 ---
 
 ## 2. Static visualizations
 
-### 2.1 ASCII art (use 80% of the time)
+### 2.1 HTML/CSS Layouts (Preferred) & Inline SVGs
 
-Pros: zero dependencies, copies cleanly, monospaced is universal.
+All diagrams, flowcharts, trees, and shapes must be built with **structured HTML/CSS layouts** (CSS Grid, Flexbox, border connectors, and relative positioning) or inline SVGs. Do NOT use ASCII art or text-based box-drawing characters.
 
-Patterns:
+**Prefer HTML/CSS layouts over SVGs** because inline SVGs frequently suffer from rendering, scaling, alignment, and text-overlapping bugs across different system fonts, screen resolutions, and mobile viewports. HTML/CSS layouts scale natively, wrap automatically, and are fully responsive.
 
-**Memory layout**
-```
-┌──────────────────────┐
-│ Code (Text)          │ ← 0x08048000
-│ Initialized Data     │
-│ BSS (uninitialized)  │
-├──────────────────────┤
-│ Heap → growing up    │
-│  ...                 │
-│ Stack ← growing down │ ← 0xC0000000
-└──────────────────────┘
-```
+#### Best Practices for SVGs (when SVG is necessary for complex curves/shapes):
+- **Responsiveness**: Always set `viewBox` and style with `max-width: 100%; height: auto; background: transparent;`.
+- **Styling**: Inject CSS `<style>` rules inside the `<svg>` and refer to global course theme tokens (`var(--blue)`, `var(--surf)`, `var(--border)`, `var(--txt)`, etc.) for fills and strokes to support light/dark modes automatically.
+- **Labels**: Use `<text>` with standard readable fonts (e.g., `font-family="sans-serif"` or `Roboto`) and appropriate anchoring (`text-anchor="middle"`).
 
-**Tree / hierarchy**
-```
-         [root: 50]
-        /          \
-   [30]            [70]
-   /  \           /    \
- [10] [40]    [60]    [80]
-```
+### 2.2 Inline SVG (when HTML/CSS layout is insufficient)
 
-**Pipeline / sequence**
-```
-  read() → parse() → validate() → store() → respond()
-    ↓        ↓          ↓           ↓         ↓
-  bytes    AST       bool        DB id     HTTP 200
-```
-
-**State machine**
-```
-        ┌─→ READY ──┐
-        │           │ schedule()
-   fork()           ↓
-        │       RUNNING
-   create          │
-        │      ┌───┴───┐
-        │      │       │
-        │   wait()   exit()
-        │      ↓       ↓
-        │   WAITING  ZOMBIE
-        │      │
-        └──────┘
-```
-
-### 2.2 Inline SVG (when ASCII can't)
-
-Use for: precise geometry, circles, curves, color gradients.
+Use inline SVGs only when HTML/CSS layout is insufficient, such as for precise coordinate geometry, custom circular arcs, complex vector paths, or mathematical curves.
 
 ```html
 <div style="text-align:center;margin:16px 0">
@@ -226,12 +183,12 @@ Keep it < 50 lines. No frameworks.
 ## 5. Subject-specific recommendations
 
 ### Operating Systems / Systems Programming
-- **High-value:** Process tree (ASCII), memory layout, race condition timeline, scheduler Gantt chart, file descriptor table
+- **High-value:** Process tree (SVG/CSS), memory layout (SVG/CSS), race condition timeline, scheduler Gantt chart, file descriptor table
 - **Medium-value:** Animated context switch, simulated semaphore P/V counter
 - **Skip:** complex CPU pipeline animations (out of scope for most courses)
 
 ### Algorithms / Data Structures
-- **High-value:** Recursion tree (ASCII), execution trace (step-by-step table), complexity growth chart (SVG)
+- **High-value:** Recursion tree (SVG/CSS), execution trace (step-by-step table), complexity growth chart (SVG)
 - **Medium-value:** Interactive sort visualization (Canvas, ~80 lines)
 - **Skip:** building from scratch — link to external `visualgo.net` if needed
 
@@ -241,7 +198,7 @@ Keep it < 50 lines. No frameworks.
 - **Skip:** symbolic manipulation simulators (rabbit hole)
 
 ### Networking
-- **High-value:** OSI stack diagram (ASCII), packet format breakdown, sequence diagrams (TCP handshake)
+- **High-value:** OSI stack diagram (SVG/CSS), packet format breakdown, sequence diagrams (TCP handshake)
 - **Medium-value:** Interactive subnet calculator
 - **Skip:** real packet capture (use Wireshark-screenshot images instead)
 
@@ -278,7 +235,7 @@ Keep each chapter page under:
 - 5 inline `<script>` blocks
 - 0 external dependencies beyond `base.css`, `nav.js`, `quiz-loader.js`, and (optionally) MathJax
 
-If your chapter feels heavy, you're over-doing interactivity. Strip back to ASCII.
+If your chapter feels heavy, you're over-doing interactivity. Strip back to static SVGs/CSS grids.
 
 ---
 

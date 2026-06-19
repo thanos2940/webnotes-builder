@@ -1,6 +1,8 @@
 # 📚 Webnotes Builder — Gemini CLI Extension
 
-A **Gemini CLI extension** (and standalone Agent Skill) that converts a folder of course material (PDF slides, markdown, lecture handouts) into a beautifully designed, interactive HTML study site — chapter-by-chapter, with per-section quizzes, ASCII/SVG diagrams, annotated code, and a cross-chapter test mode.
+A **Gemini CLI extension** (and standalone Agent Skill) that converts a folder of course material (PDF slides, markdown, past exams, assignments) into a beautifully designed, interactive HTML study site — chapter-by-chapter, with per-section quizzes, CSS diagrams, annotated code, an **exam-prep page** (solved exam-style exercises, theory flash-cards, "what does this print?" drills), and a cross-chapter test mode.
+
+It also works in **ENHANCE mode**: point it at an existing webnotes site and it audits the pages against this standard (component usage, depth vs source, quizzes, exam prep, responsive rendering) and upgrades the gaps in place.
 
 Works as:
 - 🟢 **Native Gemini CLI extension** with bundled slash commands + auto-loaded context
@@ -55,7 +57,7 @@ cp -r ./webnotes-builder ~/.gemini/extensions/
 
 ```bash
 gemini
-> /extensions list   # shows "webnotes-builder" v1.1.0
+> /extensions list   # shows "webnotes-builder" v1.2.0
 > /skills list       # shows "webnotes-builder" skill
 ```
 
@@ -72,6 +74,7 @@ gemini
 | `/webnotes-html <N>` | Write HTML page for chapter N |
 | `/webnotes-quiz <N>` | Write per-section quizzes for chapter N |
 | `/webnotes-review <N>` | **Mandatory reviewer pass** — verify against source |
+| `/webnotes-examprep` | Build/enhance `exam_prep.html` from past exams + assignments |
 | `/webnotes-checklist` | Final QA across the site |
 
 ### Typical sequence
@@ -85,6 +88,7 @@ gemini
 /webnotes-review 1
 /webnotes-outline 2
 ...
+/webnotes-examprep            (if you have past exams / assignments)
 /webnotes-checklist
 ```
 
@@ -100,7 +104,7 @@ webnotes-builder/
 ├── GEMINI.md                            ← auto-loaded context primer
 ├── README.md
 ├── AGENT_INTEGRATION.md                 ← non-Gemini agent setup
-├── commands/                            ← Gemini slash commands (8 TOML files)
+├── commands/                            ← Gemini slash commands (9 TOML files)
 │   ├── webnotes-start.toml
 │   ├── webnotes-resume.toml
 │   ├── webnotes-status.toml
@@ -108,12 +112,13 @@ webnotes-builder/
 │   ├── webnotes-html.toml
 │   ├── webnotes-quiz.toml
 │   ├── webnotes-review.toml
+│   ├── webnotes-examprep.toml           ⭐ exam-prep page
 │   └── webnotes-checklist.toml
 ├── skills/
 │   └── webnotes-builder/                ← Agent Skill (works standalone)
 │       ├── SKILL.md                     ← YAML frontmatter + body
 │       ├── AGENTS.md
-│       ├── references/                  ← 10 docs (progressive disclosure)
+│       ├── references/                  ← 11 docs (progressive disclosure)
 │       │   ├── 01-workflow.md
 │       │   ├── 02-research.md
 │       │   ├── 03-design-system.md
@@ -123,12 +128,13 @@ webnotes-builder/
 │       │   ├── 07-checklist.md
 │       │   ├── 08-fidelity.md           ⭐ no silent omissions
 │       │   ├── 09-chunked-execution.md  ⭐ multi-session workflow
-│       │   └── 10-reviewer-pass.md      ⭐ verification loop
+│       │   ├── 10-reviewer-pass.md      ⭐ verification loop
+│       │   └── 11-exam-prep.md          ⭐ exam-prep page + Exam Focus boxes
 │       └── assets/                      ← templates copied to user workspace
 │           ├── chapter.html
 │           ├── index.html
 │           ├── interactive-quiz.html
-│           ├── styles/{base,quiz}.css
+│           ├── styles/{base,layout,components,quiz}.css
 │           ├── js/{nav,quiz-loader,interactive_quiz}.js
 │           └── data/questions.js
 └── scripts/                             ← helper shell scripts
@@ -143,17 +149,20 @@ webnotes-builder/
 ```
 ~/uni/algorithms-course/
 ├── slides/                              ← (untouched) source PDFs
-├── _build/                              ← agent's working state
+├── exams/ · assignments/                ← (untouched) exam material, if any
+├── _build/                              ← agent's working state ONLY
 │   ├── STATE.md                         ← progress tracker
 │   ├── topic1_outline.md
 │   ├── topic1_fidelity.md
+│   ├── examprep_outline.md
 │   └── ...
 ├── index.html                           ← course hub
-├── topic1_bigo.html                     ← chapters
+├── topic1_bigo.html                     ← chapters (at the root, next to index.html)
 ├── topic2_recursion.html
 ├── ...
+├── exam_prep.html                       ← exam prep (if exam material exists)
 ├── interactive_quiz.html                ← cross-chapter test
-├── styles/{base,quiz}.css
+├── styles/{base,layout,components,quiz}.css
 ├── js/{nav,quiz-loader,interactive_quiz}.js
 └── data/questions.js
 ```
@@ -177,6 +186,25 @@ Preview: `npx serve .` → http://localhost:3000
 - **Dark-mode, mobile responsive**
 
 Cross-chapter quiz aggregates all questions into a graded test.
+
+---
+
+## 🎯 Exam prep (new in 1.2)
+
+When the course folder contains past exams (`exams/`, photos/PDFs of papers), assignments, or exercise sets, the build includes an **exam-prep page**:
+
+- **Δομή εξέτασης** — typical structure + time strategy
+- **Θεωρία-Flash** — every recurring short-answer theory pair, with ready 2-line answers
+- **One solved section per exercise family** — full statement → annotated solution → "τα σημεία που βαθμολογούνται" → a variant for generalization
+- **«Τι θα τυπώσει;» drills** — reveal-answer trace questions
+- **Assignments bridge** — maps each exercise family to the *idea* the student already implemented in the assignments
+- **🎯 Exam Focus boxes** inside the chapter pages, linking to the matching solved exercise
+
+Two golden rules (enforced by the QA checklist):
+1. Everything is presented as **generic exercises** — never "this fell in June 2025".
+2. The bridge teaches **patterns**, never one student's specific implementation or file names.
+
+Full spec: `skills/webnotes-builder/references/11-exam-prep.md`.
 
 ---
 

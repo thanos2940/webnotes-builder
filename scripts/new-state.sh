@@ -41,16 +41,17 @@ cat > "$BUILD_DIR/STATE.md" <<EOF
 - Language: $LANG
 - Depth: $DEPTH
 - Source: ./slides/   (adjust if different)
-- Skill version: 1.1.0
+- Skill version: 1.2.0
 - Started: $(date +%Y-%m-%d)
 
 ## Phases
-- [ ] 1. Discovery
+- [ ] 1. Discovery (mode: CREATE | ENHANCE; exam material: yes/no)
 - [ ] 2. Plan approved
 - [ ] 3. Scaffolding
 - [ ] 4. Chapters
-- [ ] 5. Cross-chapter quiz
-- [ ] 6. Final QA
+- [ ] 5. Exam prep (exam_prep.html + Exam Focus boxes) — skip only if no exam material
+- [ ] 6. Cross-chapter quiz
+- [ ] 7. Final QA
 
 ## Chapter table
 | # | Source PDF | Slug | Outline | HTML | Quiz | Reviewer | Notes |

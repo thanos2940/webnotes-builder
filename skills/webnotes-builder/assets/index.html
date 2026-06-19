@@ -13,6 +13,7 @@
   For each chapter, add a <a class="topic-card"> block (see existing examples below
   in the body — copy and edit, don't manually construct from scratch).
 
+  If exam material exists, uncomment the orange Exam Prep card (before the quiz card).
   The Interactive Quiz card at the end is purple-themed by design — keep it as-is.
 -->
 <html lang="[[LANG]]">
@@ -148,6 +149,20 @@
         </a>
 
         <!-- ...more chapter cards... -->
+
+        <!-- ─── Exam Prep card (orange, before the quiz card) — include ONLY if exam
+             material exists; see references/11-exam-prep.md §10 ─── -->
+        <!--
+        <a href="exam_prep.html" class="topic-card"
+           style="border-color: var(--orange); background: linear-gradient(135deg, var(--surf), rgba(251, 146, 60, 0.06));">
+            <div class="topic-num" style="color: var(--orange);">EXAM PREP</div>
+            <h3>[[EXAM_PREP_TITLE]] 🎯</h3>
+            <p>[[EXAM_PREP_SUMMARY]]</p>
+            <div class="topic-tags">
+                <span class="tag">solved</span><span class="tag">patterns</span><span class="tag">drills</span>
+            </div>
+        </a>
+        -->
 
         <!-- ─── Interactive Quiz card (keep at end, purple-themed) ─── -->
         <a href="interactive_quiz.html" class="topic-card" style="border-color: var(--purple); background: linear-gradient(135deg, var(--surf), rgba(192, 132, 252, 0.05));">

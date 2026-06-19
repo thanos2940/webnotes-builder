@@ -150,7 +150,7 @@ When reviewing, scan for these specific failure modes:
 | Red text or warning slide | Preserved as `.rbox` or `.wbox` |
 | Code listing with comments | Code is present with comments preserved |
 | Table on slide | Output has matching `<table class="vtbl">` |
-| Diagram | ASCII / SVG equivalent in output |
+| Diagram | SVG / CSS layout equivalent in output (no ASCII art) |
 | Worked example | Reproduced in output |
 | Multiple cases (e.g. "case 1:", "case 2:") | All cases present |
 | "Don't..." / "Avoid..." / "Never..." | Anti-pattern preserved |

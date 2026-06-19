@@ -1,6 +1,10 @@
 # 04 — HTML Component Reference
 
 > Copy-paste recipes for every component. The chapter is built by composing these.
+>
+> *Note:* Chapter pages live at the **workspace root**, next to `index.html` — so asset
+> references are root-relative (`styles/base.css`, `js/nav.js`). `_build/` holds only
+> state/outlines, never HTML pages.
 
 ---
 
@@ -13,8 +17,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Topic N · Chapter Title</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
   <style> /* chapter-specific overrides — see 03-design-system.md */ </style>
   <script src="js/nav.js" defer></script>
   <script src="data/questions.js" defer></script>
@@ -104,17 +110,17 @@
 </div>
 ```
 
-For nested elements, prefer `<ul>`s with custom bullet styles:
+---
+
+## 5. Lists (ol, ul)
+
+Always apply `padding-left: 1.5rem` to all list elements. This ensures that bullets and numbers are properly indented within their parent containers and do not "clip" out of the viewport on mobile or narrow containers.
 
 ```html
-<div class="card">
-  <div class="card-title">Things to remember</div>
-  <ul style="color:var(--muted);list-style:none;padding:0">
-    <li style="margin-bottom:12px">
-      <strong style="color:var(--blue)">Item:</strong> description...
-    </li>
-  </ul>
-</div>
+<ul style="padding-left: 1.5rem">
+  <li>First item</li>
+  <li>Second item with <strong>emphasis</strong></li>
+</ul>
 ```
 
 ---
@@ -175,20 +181,23 @@ For nested elements, prefer `<ul>`s with custom bullet styles:
 
 ## 6. Code block (annotated)
 
-```html
-<div class="cb" style="padding:14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.9;overflow-x:auto">
-<span class="mc">#include</span> <span class="st">&lt;stdio.h&gt;</span>
+To maintain maximum readability and consistency:
+1. **Tag Placement**: Place the `<code>` tag immediately after `<div class="cb">` with no newline/spaces to avoid accidental leading spaces.
+2. **Formatting**: Break the line after the logical rule operator (e.g., `:-` in Prolog, or `{` in C) and indent the body.
+3. **Indentation**: Indent the body of the rule with **4 spaces**.
+4. **Alignment**: All code blocks must be **strictly left-aligned**.
 
-<span class="kw">int</span> <span class="fn">main</span>(<span class="kw">int</span> argc, <span class="kw">char</span> *argv[]) {
-    <span class="kw">if</span> (argc &lt; <span class="nm">2</span>) {
-        <span class="fn">printf</span>(<span class="st">"Usage: %s name\n"</span>, argv[<span class="nm">0</span>]);
-        <span class="kw">return</span> <span class="nm">1</span>;
-    }
-    <span class="cm">// greet the user</span>
-    <span class="fn">printf</span>(<span class="st">"Hello, %s!\n"</span>, argv[<span class="nm">1</span>]);
+```html
+<div class="cb"><code><span class="fn">predicate</span>(X, Y) <span class="kw">:-</span>
+    <span class="fn">goal1</span>(X),
+    <span class="fn">goal2</span>(Y).</code></div>
+```
+
+```html
+<div class="cb"><code><span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="fn">printf</span>(<span class="st">"Hello World"</span>);
     <span class="kw">return</span> <span class="nm">0</span>;
-}
-</div>
+}</code></div>
 ```
 
 **Class reference:**
@@ -265,23 +274,66 @@ Class reference for struct fields:
 
 ---
 
-## 10. ASCII diagram
+## 10. HTML/CSS Layout Diagrams & Flowcharts (Preferred over SVGs)
+
+Do NOT use text/ASCII-based drawings or trees. Recreate all diagrams, flowcharts, trees, and processes using **structured HTML/CSS layouts** (CSS Flexbox, Grid, border connectors, and relative positioning) rather than inline SVGs. 
+**Why?** Inline SVGs frequently suffer from layout, rendering, scaling, alignment, and text-overlapping bugs across different system fonts, screen resolutions, and mobile viewports. HTML/CSS layouts scale natively, wrap automatically, and are fully responsive.
+
+### A. Process Flow / Chain Diagram Recipe
 
 ```html
-<div class="thread-diagram">
-  <div style="color:var(--green);font-weight:700;margin-bottom:8px">── Process Address Space ──</div>
-  <div style="color:var(--muted);font-size:0.85rem">
-    ┌──────────────────────────────┐<br>
-    │ <span style="color:var(--cyan)">Code (Text)</span> &nbsp;&nbsp; <span class="cm">← shared</span> │<br>
-    │ <span style="color:var(--cyan)">Heap (malloc)</span> <span class="cm">← shared</span> │<br>
-    ├──────────────────────────────┤<br>
-    │ <span style="color:var(--green)">Stack T1</span> │ <span style="color:var(--yellow)">Stack T2</span> │<br>
-    └──────────────────────────────┘
+<div style="background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px 16px;margin:24px 0">
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;width:100%">
+    <!-- Step 1 -->
+    <div style="background:var(--bg);border:1.5px solid var(--blue);padding:12px;border-radius:8px;flex:1;min-width:130px;text-align:center;box-shadow:0 4px 6px rgba(0,0,0,0.1)">
+      <div style="color:var(--blue);font-weight:700;font-size:0.85rem">Phase 1</div>
+      <div style="color:var(--muted);font-size:0.7rem;margin-top:4px">Description A</div>
+    </div>
+    
+    <!-- Arrow -->
+    <div style="display:flex;flex-direction:column;align-items:center;color:var(--muted);font-size:0.75rem;min-width:40px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--dim)">Action</span>
+      <span style="font-size:1.2rem;line-height:1">&rarr;</span>
+    </div>
+
+    <!-- Step 2 -->
+    <div style="background:var(--bg);border:1.5px solid var(--cyan);padding:12px;border-radius:8px;flex:1;min-width:130px;text-align:center;box-shadow:0 4px 6px rgba(0,0,0,0.1)">
+      <div style="color:var(--cyan);font-weight:700;font-size:0.85rem">Phase 2</div>
+      <div style="color:var(--muted);font-size:0.7rem;margin-top:4px">Description B</div>
+    </div>
   </div>
 </div>
 ```
 
-Use Unicode box-drawing chars: `┌─┐ │ └─┘ ├ ┤ ┬ ┴ ┼` and arrows `→ ← ↑ ↓ ↔`.
+### B. Tree / Hierarchy Diagram Recipe
+Include the CSS stylesheet classes in the page's `<style>` tag, then define:
+
+```html
+<div class="tree-container">
+  <div class="tree-node internal">
+    <div class="node-content">Root Node</div>
+    
+    <div class="branches">
+      <div class="branch-item">
+        <span class="branch-label">Condition A</span>
+        <div class="tree-node leaf-yes">
+          <div class="node-content">Leaf Value A</div>
+        </div>
+      </div>
+      
+      <div class="branch-item">
+        <span class="branch-label">Condition B</span>
+        <div class="tree-node internal">
+          <div class="node-content">Sub Node</div>
+          <div class="branches">
+            <!-- Nested children here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
 
 ---
 
@@ -466,7 +518,78 @@ For algorithm visualization:
 
 ---
 
-## 21. Anti-patterns (don't do these)
+## 21. Exam components (used on exam_prep.html — full spec in `11-exam-prep.md`)
+
+### Exercise statement box (`.exam-stmt`)
+
+Requires the extra CSS from `11-exam-prep.md` §5 in the page's `<style>`.
+
+```html
+<div class="exam-stmt">
+  <div class="stmt-label">Άσκηση 1 — descriptive name</div>
+  <p>Full exercise statement...</p>
+  <ul>
+    <li>i) first requirement</li>
+    <li>ii) second requirement</li>
+  </ul>
+  <p><strong>Ερώτημα (β):</strong> numeric sub-question?</p>
+</div>
+```
+
+Label is always `Άσκηση N — <name>` or `Άσκηση N — παραλλαγή: <name>`. NEVER a dated
+reference like "Εξέταση Ιουνίου 2025" (see `11-exam-prep.md` §2 Rule A).
+
+### 🎯 Exam Focus box (used in CHAPTER pages)
+
+Placed immediately before a section's `.section-quiz` div, links to an exam_prep anchor:
+
+```html
+<div class="tip">
+  <div class="tip-icon">🎯</div>
+  <div>
+    <div class="tip-title">Exam Focus — short hook</div>
+    <div class="tip-text">The recurring exercise/trap this section maps to, the 1-2
+    graded points, and a link: <a href="exam_prep.html#anchor">Λυμένη άσκηση</a>.</div>
+  </div>
+</div>
+```
+
+### Inline reveal-answer drill (trace questions)
+
+Reuses quiz CSS + the global `toggleAnswer()` from quiz-loader.js — no extra JS:
+
+```html
+<div class="quiz">
+  <h3>🔥 Theme title</h3>
+  <div class="qitems">
+    <div class="qitem">
+      <div class="qq">Question text<br><code>code snippet if any</code></div>
+      <div class="qa" id="tq1" style="display:none"><strong>Answer.</strong> Mechanism + the trap it tests.</div>
+      <button class="qa-toggle" onclick="toggleAnswer('tq1', this)">Δες απάντηση</button>
+    </div>
+  </div>
+</div>
+```
+
+`id` unique per item (`tq1`, `tq2`, ...).
+
+### Exam Prep hub card (index.html — orange, before the quiz card)
+
+```html
+<a href="exam_prep.html" class="topic-card"
+   style="border-color: var(--orange); background: linear-gradient(135deg, var(--surf), rgba(251, 146, 60, 0.06));">
+  <div class="topic-num" style="color: var(--orange);">EXAM PREP</div>
+  <h3>Εξεταστική 🎯</h3>
+  <p>Λυμένες ασκήσεις στο στυλ της εξέτασης, μοτίβα, drills και η γέφυρα από τις εργασίες.</p>
+  <div class="topic-tags">
+    <span class="tag">solved</span><span class="tag">patterns</span><span class="tag">drills</span>
+  </div>
+</a>
+```
+
+---
+
+## 22. Anti-patterns (don't do these)
 
 ❌ `<pre>` and `<code>` for code blocks — they don't get the syntax highlighting.
 ❌ Inline `style="font-family: monospace"` — use the existing `.cb` class.
