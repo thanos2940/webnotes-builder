@@ -1,4 +1,4 @@
-# 📚 Webnotes Builder — Gemini CLI Extension
+# 📚 Webnotes Builder
 
 A **Gemini CLI extension** (and standalone Agent Skill) that converts a folder of course material (PDF slides, markdown, past exams, assignments) into a beautifully designed, interactive HTML study site — chapter-by-chapter, with per-section quizzes, CSS diagrams, annotated code, an **exam-prep page** (solved exam-style exercises, theory flash-cards, "what does this print?" drills), and a cross-chapter test mode.
 
