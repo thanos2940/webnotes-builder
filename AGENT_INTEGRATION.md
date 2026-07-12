@@ -1,6 +1,49 @@
 # Agent Integration Guide
 
-> Per-platform install/invocation. **For Gemini CLI**, use the extension directly (`gemini extensions install`). **For any other agent**, the inner skill at `skills/webnotes-builder/` is a valid standalone Agent Skill — point your agent at `skills/webnotes-builder/SKILL.md`.
+> Per-platform install/invocation. The same repo works natively as a **Claude Code
+> plugin** (`.claude-plugin/plugin.json` + markdown commands + subagents in `agents/`),
+> a **Gemini CLI extension** (`gemini-extension.json` + TOML commands), and a
+> **standalone Agent Skill** (`skills/webnotes-builder/SKILL.md`) for Antigravity,
+> Cursor, Claude Desktop, OpenAI Assistants, and local LLMs (`PROMPT.md`).
+> Pick your section below.
+
+---
+
+## Claude Code (native plugin — recommended for Claude)
+
+The repo is a valid Claude Code plugin: `.claude-plugin/plugin.json`, markdown slash
+commands in `commands/*.md` (the `.toml` files alongside them are for Gemini and are
+ignored), the skill in `skills/webnotes-builder/`, and three role subagents in
+`agents/` (`webnotes-exam-miner`, `webnotes-chapter-writer`, `webnotes-reviewer`).
+
+### Install from a marketplace/repo
+
+```bash
+claude
+> /plugin marketplace add thanos2940/webnotes-builder
+> /plugin install webnotes-builder
+```
+
+### Install from a local clone (development)
+
+```bash
+claude --plugin-dir /path/to/webnotes-builder
+# or add it under "plugins" in your settings for persistence
+```
+
+### Use
+
+```bash
+cd ~/uni/algorithms-course/
+claude
+> /webnotes-start          # discovery + goal-mode question
+> /webnotes-mine           # if past exams exist
+> /webnotes-outline 1  →  /webnotes-html 1  →  /webnotes-quiz 1  →  /webnotes-review 1
+> /webnotes-examprep  →  /webnotes-checklist
+```
+
+The subagents let the main conversation orchestrate: the reviewer runs as a fresh
+context automatically (see `skills/webnotes-builder/references/13-orchestration.md`).
 
 ---
 
@@ -66,7 +109,7 @@ gemini extensions uninstall webnotes-builder
 
 ---
 
-## Claude Code (CLI)
+## Claude Code (skill-only, without the plugin)
 
 The inner skill at `webnotes-builder/skills/webnotes-builder/` is a valid Agent Skill.
 
@@ -204,6 +247,16 @@ Enable Code Interpreter + File Search.
 
 ---
 
+## Local LLMs (Ollama, LM Studio, aider, opencode, ...)
+
+Use the universal bootstrap prompt in **`PROMPT.md`** (repo root) as the first message
+to any file-capable agent opened in the course directory. It includes a
+per-session file-feeding table for small-context models and the role prompts for
+multi-agent runs. If the model can't read PDFs, convert first
+(`pdftotext -layout`, `tesseract` for scans).
+
+---
+
 ## Manual workflow (no agent)
 
 For developers building by hand:
@@ -245,7 +298,11 @@ Each course has its own `_build/STATE.md`. The extension picks up the right stat
 
 ## Multi-agent collaboration (advanced)
 
-For maximum quality, run TWO agents per chapter:
+Full role definitions (Orchestrator / Exam Miner / Outliner / Chapter Writer /
+Reviewer / QA Runner), platform mapping, and parallelism rules:
+`skills/webnotes-builder/references/13-orchestration.md`. Role prompts ready to paste:
+`agents/*.md`. On Claude Code with the plugin installed, the roles are registered
+subagents. The minimal version — run TWO agents per chapter:
 
 1. **Builder** does `/webnotes-outline`, `/webnotes-html`, `/webnotes-quiz`
 2. **Reviewer** (fresh context, ideally a different model) does `/webnotes-review`

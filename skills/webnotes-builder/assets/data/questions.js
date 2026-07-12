@@ -11,7 +11,7 @@
  * have "text", "correct" (boolean — exactly ONE option per question
  * should be true), and "explanation".
  *
- * See webnotes-skill/references/05-quiz-format.md for the full spec and
+ * See the skill's references/05-quiz-format.md for the full spec and
  * examples of good question / distractor / explanation writing.
  */
 

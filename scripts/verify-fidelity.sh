@@ -6,7 +6,7 @@
 #   bash scripts/verify-fidelity.sh <chapter_html> <fidelity_md>
 #
 # Example:
-#   bash webnotes-skill/scripts/verify-fidelity.sh \
+#   bash webnotes-builder/scripts/verify-fidelity.sh \
 #        topic4_prolog.html \
 #        _build/topic4_fidelity.md
 #

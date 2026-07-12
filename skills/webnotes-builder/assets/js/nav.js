@@ -40,7 +40,27 @@ const SVG_ICONS = {
     wrench: `<svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
     scissors: `<svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="9.8" x2="20" y1="8.2" y2="15.8"/><line x1="9.8" x2="20" y1="15.8" y2="8.2"/></svg>`,
     keyboard: `<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><line x1="6" x2="6.01" y1="8" y2="8"/><line x1="10" x2="10.01" y1="8" y2="8"/><line x1="14" x2="14.01" y1="8" y2="8"/><line x1="18" x2="18.01" y1="8" y2="8"/><line x1="6" x2="6.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="12" y2="12"/><line x1="7" x2="17" y1="16" y2="16"/></svg>`,
-    check: `<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`
+    check: `<svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+
+    // Data-science / math topic icons
+    barChart: `<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+    distance: `<svg viewBox="0 0 24 24"><line x1="5" y1="3" x2="5" y2="20"/><line x1="5" y1="20" x2="21" y2="20"/><circle cx="10" cy="14" r="2.5"/><circle cx="18" cy="7" r="2.5"/><line x1="10" y1="14" x2="18" y2="7"/><line x1="5" y1="14" x2="10" y2="14" stroke-dasharray="2 2"/><line x1="10" y1="14" x2="10" y2="20" stroke-dasharray="2 2"/><line x1="5" y1="7" x2="18" y2="7" stroke-dasharray="2 2"/><line x1="18" y1="7" x2="18" y2="20" stroke-dasharray="2 2"/></svg>`,
+    decisionTree: `<svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/><circle cx="3" cy="20" r="2"/><circle cx="9" cy="20" r="2"/><circle cx="15" cy="20" r="2"/><circle cx="21" cy="20" r="2"/><line x1="12" y1="6" x2="6" y2="10"/><line x1="12" y1="6" x2="18" y2="10"/><line x1="6" y1="14" x2="3" y2="18"/><line x1="6" y1="14" x2="9" y2="18"/><line x1="18" y1="14" x2="15" y2="18"/><line x1="18" y1="14" x2="21" y2="18"/></svg>`,
+    overfitting: `<svg viewBox="0 0 24 24"><line x1="4" y1="3" x2="4" y2="20"/><line x1="4" y1="20" x2="21" y2="20"/><path d="M6 9 C11 17, 15 18, 20 18"/><path d="M6 7 C10 16, 12 16, 20 8"/><line x1="11" y1="4" x2="11" y2="20" stroke-dasharray="2 2"/></svg>`,
+    knn: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="12" r="3.5"/><circle cx="12" cy="12" r="8" stroke-dasharray="2 2"/><circle cx="12" cy="6" r="1.5"/><circle cx="8" cy="14" r="1.5"/><circle cx="16" cy="13" r="1.5"/><circle cx="6" cy="7" r="1.5"/><circle cx="17" cy="7" r="1.5"/><circle cx="13" cy="19" r="1.5"/><line x1="12" y1="12" x2="12" y2="8.5"/><line x1="12" y1="12" x2="9.5" y2="13.5"/><line x1="12" y1="12" x2="14.5" y2="12.5"/></svg>`,
+    svm: `<svg viewBox="0 0 24 24"><line x1="4" y1="20" x2="20" y2="4"/><line x1="7" y1="20" x2="20" y2="7" stroke-dasharray="2 2"/><line x1="4" y1="17" x2="17" y2="4" stroke-dasharray="2 2"/><circle cx="15" cy="12" r="1.5"/><circle cx="18" cy="17" r="1.5"/><circle cx="13" cy="20" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="6" cy="7" r="1.5"/><circle cx="11" cy="4" r="1.5"/></svg>`,
+    ensemble: `<svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="12" r="3"/><line x1="8.5" y1="7.25" x2="15.5" y2="10.75"/><line x1="8.5" y1="12" x2="15" y2="12"/><line x1="8.5" y1="16.75" x2="15.5" y2="13.25"/><path d="M17 12h2M18 11v2"/></svg>`,
+    cart: `<svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1.5"/><circle cx="19" cy="21" r="1.5"/><path d="M2 2h3.5l2.5 12.5a2 2 0 0 0 2 1.5h8.5a2 2 0 0 0 2-1.5L22 6H6.5"/></svg>`,
+    clustering: `<svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="9" cy="5" r="1.5"/><circle cx="7.5" cy="6.5" r="4.5" stroke-dasharray="2 2"/><circle cx="11" cy="16" r="1.5"/><circle cx="13" cy="18" r="1.5"/><circle cx="12" cy="15" r="1.5"/><circle cx="12" cy="16.3" r="4.5" stroke-dasharray="2 2"/><circle cx="16" cy="7" r="1.5"/><circle cx="18" cy="9" r="1.5"/><circle cx="19" cy="6" r="1.5"/><circle cx="17.7" cy="7.3" r="4.5" stroke-dasharray="2 2"/></svg>`,
+
+    // Extra helper icons (emoji replacements)
+    search: `<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+    globe: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+    dice: `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/><circle cx="12" cy="12" r="1.5"/></svg>`,
+    dna: `<svg viewBox="0 0 24 24"><path d="M4.5 10.5c.875-1.75 3.5-5.25 7.5-5.25s6.625 3.5 7.5 5.25M4.5 13.5c.875 1.75 3.5 5.25 7.5 5.25s6.625-3.5 7.5-5.25"/><line x1="6" y1="12" x2="6" y2="12"/><line x1="9" y1="9" x2="9" y2="15"/><line x1="12" y1="7" x2="12" y2="17"/><line x1="15" y1="9" x2="15" y2="15"/><line x1="18" y1="12" x2="18" y2="12"/></svg>`,
+    target: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+    book: `<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+    chain: `<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`
 };
 
 const emojiToSvgMap = {
@@ -83,11 +103,13 @@ const emojiToSvgMap = {
 // chapter's subject. Keep 'index' first; keep 'examprep' and 'quiz' last.
 const topics = [
     { id: 'index', title: 'Home', path: 'index.html', icon: SVG_ICONS.home },
-    { id: 'topic1', title: '[[CHAPTER_1_TITLE]]', path: 'topic1_[[SLUG]].html', icon: SVG_ICONS.folder },
+    { id: 'topic1', title: '[[CHAPTER_1_TITLE]]', path: 'topic1_[[SLUG]].html', icon: SVG_ICONS.folder, subpages: [] },
     // ... one entry per chapter ...
     { id: 'examprep', title: 'Exam Prep', path: 'exam_prep.html', icon: SVG_ICONS.gradCap },
-    { id: 'quiz', title: 'Interactive Quiz', path: 'interactive_quiz.html', icon: SVG_ICONS.fileQuestion }
+    { id: 'quiz', title: 'Interactive Quiz', path: 'interactive_quiz.html', icon: SVG_ICONS.fileQuestion },
+    { id: 'flashcards', title: 'Flashcards Test', path: 'flashcards.html', icon: SVG_ICONS.fileQuestion }
 ];
+window.navTopics = topics;
 
 function initNav() {
     const navContainer = document.getElementById('site-nav');
@@ -98,12 +120,15 @@ function initNav() {
     const logo = document.createElement('a');
     logo.href = 'index.html';
     logo.className = 'nav-logo';
-    logo.innerHTML = `<span>${SVG_ICONS.zap}</span> System Programming`;
+    logo.innerHTML = `<span>${SVG_ICONS.zap}</span> [[COURSE_TITLE]]`;
 
     const linksContainer = document.createElement('div');
     linksContainer.className = 'nav-links';
 
     topics.forEach(topic => {
+        const itemContainer = document.createElement('div');
+        itemContainer.className = 'nav-item-container';
+
         const link = document.createElement('a');
         link.href = topic.path;
         link.className = 'nav-link';
@@ -111,8 +136,47 @@ function initNav() {
             link.classList.add('active');
         }
         link.title = topic.title;
-        link.innerHTML = `<span>${topic.icon}</span> ${topic.title}`;
-        linksContainer.appendChild(link);
+        link.innerHTML = `<span>${topic.icon}</span> <span class="nav-text">${topic.title}</span>`;
+
+        if (topic.subpages && topic.subpages.length > 0) {
+            const toggleIcon = document.createElement('span');
+            toggleIcon.className = 'nav-toggle';
+            toggleIcon.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+            link.appendChild(toggleIcon);
+
+            const submenu = document.createElement('div');
+            submenu.className = 'nav-submenu';
+            
+            topic.subpages.forEach(sub => {
+                const subLink = document.createElement('a');
+                subLink.href = sub.path;
+                subLink.className = 'nav-sublink';
+                // Check if active hash matches or path matches
+                if (currentPath === topic.path && window.location.hash === '#' + sub.path.split('#')[1]) {
+                    subLink.classList.add('active');
+                }
+                subLink.innerHTML = `<span class="nav-text">${sub.title}</span>`;
+                submenu.appendChild(subLink);
+            });
+
+            link.addEventListener('click', (e) => {
+                if (e.target.closest('.nav-toggle')) {
+                    e.preventDefault();
+                    itemContainer.classList.toggle('expanded');
+                }
+            });
+
+            if (currentPath === topic.path) {
+                itemContainer.classList.add('expanded');
+            }
+
+            itemContainer.appendChild(link);
+            itemContainer.appendChild(submenu);
+        } else {
+            itemContainer.appendChild(link);
+        }
+
+        linksContainer.appendChild(itemContainer);
     });
 
     const actionsContainer = document.createElement('div');
@@ -141,6 +205,8 @@ function initNav() {
     navWrapper.className = 'nav-wrapper';
     navWrapper.appendChild(logo);
     navWrapper.appendChild(linksContainer);
+
+    // Move actions inside the wrapper, below links
     navWrapper.appendChild(actionsContainer);
 
     navContainer.appendChild(navWrapper);

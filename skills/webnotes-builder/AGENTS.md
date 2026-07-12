@@ -9,16 +9,21 @@ You are about to build an interactive course-notes website from a folder of PDFs
 1. **Read `SKILL.md`** in this directory — that's your full spec.
 2. **Then read** the relevant `references/*.md` files (the SKILL.md tells you which to read first).
 3. **Discover** source material in the parent directory (`../slides/*.pdf`, `../notes/*.md`, etc.).
-4. **Propose a chapter plan** to the user, get explicit confirmation.
-5. **Build chapter-by-chapter** — one work item per session, never all at once.
-6. **Always do a reviewer pass** (re-read source, verify nothing missing).
-7. **Maintain `../_build/STATE.md`** so future sessions can continue.
+4. **Ask the GOAL MODE question**: PASS (πέρνα το μάθημα — exam-pattern-driven, exam
+   mining first per `references/12-exam-mining.md`) or MASTER (full coverage of all
+   material). Record it in STATE.md.
+5. **Propose a chapter plan** to the user, get explicit confirmation.
+6. **Build chapter-by-chapter** — one work item per session, never all at once.
+7. **Always do a reviewer pass** (re-read source, verify nothing missing).
+8. **Maintain `../_build/STATE.md`** so future sessions can continue.
 
 ## Critical rules (from SKILL.md)
 
-- **Content fidelity is non-negotiable.** Never silently omit content from the source. See `references/08-fidelity.md`.
+- **Content fidelity is non-negotiable.** Never silently omit content from the source. See `references/08-fidelity.md`. (PASS mode: fidelity is scoped to the confirmed syllabus; out-of-scope items are excluded *visibly* under `## Skipped (out of syllabus)`.)
 - **Chunked execution.** One chapter per work cycle. See `references/09-chunked-execution.md`.
 - **Reviewer pass is mandatory** before marking a chapter complete. See `references/10-reviewer-pass.md`.
+- **Exam mining before planning** whenever past exams exist. See `references/12-exam-mining.md`.
+- **Multi-agent roles** (optional): see `references/13-orchestration.md` and the role prompts in the repo-root `agents/` folder.
 
 ## Tool capabilities expected
 
@@ -32,7 +37,7 @@ If PDF reading isn't available, ask the user to run `pdftotext` first.
 
 ## Where output goes
 
-Everything generated goes to the **parent directory** of `webnotes-skill/`. Never write inside `webnotes-skill/` itself.
+Everything generated goes to the **course workspace** (the directory that contains the `webnotes-builder/` folder). Never write inside `webnotes-builder/` itself.
 
 | Output | Path |
 |---|---|

@@ -1,170 +1,185 @@
-# 📚 Webnotes Builder — Gemini CLI Extension
+# 📚 Webnotes Builder
 
-A **Gemini CLI extension** (and standalone Agent Skill) that converts a folder of course material (PDF slides, markdown, past exams, assignments) into a beautifully designed, interactive HTML study site — chapter-by-chapter, with per-section quizzes, CSS diagrams, annotated code, an **exam-prep page** (solved exam-style exercises, theory flash-cards, "what does this print?" drills), and a cross-chapter test mode.
+Turns a folder of course material (PDF slides, markdown, txt, images, **past exams**,
+assignments) into a beautifully designed, interactive HTML study site — built so a
+student can study **from the site instead of the professor's notes**.
 
-It also works in **ENHANCE mode**: point it at an existing webnotes site and it audits the pages against this standard (component usage, depth vs source, quizzes, exam prep, responsive rendering) and upgrades the gaps in place.
-
-Works as:
-- 🟢 **Native Gemini CLI extension** with bundled slash commands + auto-loaded context
-- 🟢 **Standalone Agent Skill** for Claude Code/Desktop, Antigravity, Cursor, OpenAI Assistants, any agent that can read files
+Works natively as:
+- 🟣 **Claude Code plugin** — slash commands + role subagents (`.claude-plugin/`)
+- 🟢 **Gemini CLI extension** — slash commands + auto-loaded context (`gemini-extension.json`)
+- 🔵 **Standalone Agent Skill** — Antigravity, Cursor, Claude Desktop, OpenAI Assistants
+  (`skills/webnotes-builder/SKILL.md`), or **any local LLM** via `PROMPT.md`
 
 Built on the [Agent Skills](https://agentskills.io) open standard.
 
 ---
 
-## ⚠️ This is a multi-session build
+## 🎯 Two goal modes (asked at Discovery)
 
-Building good webnotes for a real course takes **15–30 hours of agent work**. It will not happen in one conversation. The extension uses a **chunked execution model**: one work item per session, with state persisted in `_build/STATE.md`.
+| | **PASS** — «θέλω απλά να περάσω» | **MASTER** — κατανόησε όλη την ύλη |
+|---|---|---|
+| Drives the build | **Exam mining**: past papers → recurring-question families → frequency matrix → Tier 1/2/3 pass plan | The source material itself |
+| Coverage | In-syllabus chapters only; zero-exam-presence chapters *hidden* (never deleted) | Every source file, full fidelity |
+| Page style | Intuition-first: «Η Ουσία σε 60″» opener, visuals/metaphors over formulas | Complete, beginner-friendly explanation of everything |
+| Centerpiece | `exam_prep.html`: model answers per recurring question, recurring proofs, «τι να αφήσεις τελευταίο» triage — first, full-width hub card | The chapter pages; exam prep as a standard card |
+| Result | Pass the exam after ~1 day of studying one page | A central site explaining the entire course simply |
 
-Expect **~5 sessions per chapter**:
-1. Outline (read PDF, build fidelity checklist)
-2. HTML draft
-3. Quiz questions
-4. **Reviewer pass** (re-read source, verify nothing missing)
-5. (Optional) Cross-validation
-
-For a 6-chapter course: ~30 sessions spread over days. The slash commands tell you exactly what to ask next each time.
-
-**Content fidelity is the highest priority.** If your slides mention 23 Prolog operators, your output documents all 23 — never silently summarized down to "the main ones."
+Both modes keep the same fidelity discipline: nothing is *silently* dropped —
+PASS-mode exclusions are listed visibly as out-of-syllabus.
 
 ---
 
-## 🚀 Install (Gemini CLI — recommended)
+## ⛏️ Exam mining (the engine behind PASS mode)
 
-### Option 1 — Install from a public repo
+Before any chapter is planned, past exams are analyzed as data
+(`references/12-exam-mining.md` → `_build/exam_patterns.md`):
+
+1. **Question inventory** — every question from every paper (photos included)
+2. **Family clustering** — same skill across different wordings/periods
+3. **Frequency matrix** — family × exam period
+4. **Blueprint** — what the typical paper looks like
+5. **Pass-plan tiers** — CORE / FREQUENT / RARE, with explicit arithmetic:
+   *«τα Tier-1 θέματα αθροίζουν ~65 μονάδες → μαθαίνοντάς τα τέλεια περνάς με περιθώριο»*
+6. **Syllabus cross-check** — which chapters the exam never touches
+
+Attribution is a user choice: **dated** badges («πέφτει σίγουρα», «2023·Σεπτ» — great
+motivation for personal study) or **generic** exercises (for sites you'll share).
+
+---
+
+## ⚠️ This is a multi-session build
+
+Building good webnotes for a real course takes **15–30 hours of agent work**, chunked
+into one work item per session with state persisted in `_build/STATE.md`. Expect
+**~5 sessions per chapter**: Outline → HTML → Quiz → **Reviewer pass** → (optional)
+cross-validation. Every command tells you exactly what to ask next.
+
+**Content fidelity is the highest priority.** If your slides mention 23 Prolog
+operators, the output documents all 23 — never silently summarized down to "the main ones".
+
+---
+
+## 🚀 Install
+
+### Claude Code (plugin)
+
+```bash
+claude
+> /plugin marketplace add thanos2940/webnotes-builder
+> /plugin install webnotes-builder
+# or for a local clone:  claude --plugin-dir ./webnotes-builder
+```
+
+### Gemini CLI (extension)
 
 ```bash
 gemini extensions install https://github.com/thanos2940/webnotes-builder
-gemini extensions list  # verify
+# or link a local clone:  cd webnotes-builder && gemini extensions link .
 ```
 
-### Option 2 — Link a local copy (for development or single-user use)
+### Anything else
 
-```bash
-git clone https://github.com/thanos2940/webnotes-builder webnotes-builder
-cd webnotes-builder
-gemini extensions link .
-```
-
-### Option 3 — Manual install
-
-```bash
-mkdir -p ~/.gemini/extensions/
-cp -r ./webnotes-builder ~/.gemini/extensions/
-```
-
-### Verify
-
-```bash
-gemini
-> /extensions list   # shows "webnotes-builder" v1.2.0
-> /skills list       # shows "webnotes-builder" skill
-```
+Drop the `webnotes-builder/` folder into your course directory and point the agent at
+`webnotes-builder/skills/webnotes-builder/SKILL.md` — or paste the bootstrap from
+`PROMPT.md` (local LLMs). Full per-platform guide: [AGENT_INTEGRATION.md](AGENT_INTEGRATION.md).
 
 ---
 
-## 🧭 Slash commands
+## 🧭 Slash commands (Claude Code `.md` + Gemini `.toml`, same names)
 
 | Command | What it does |
 |---|---|
-| `/webnotes-start` | Discover sources, classify subject, propose chapter plan |
+| `/webnotes-start` | Discover sources, ask **goal mode**, propose plan |
+| `/webnotes-mine` | ⛏️ Mine past exams → `_build/exam_patterns.md` (run before the plan) |
 | `/webnotes-resume` | Read `_build/STATE.md`, continue next pending action |
 | `/webnotes-status` | Report build state (read-only) |
-| `/webnotes-outline <N>` | Outline chapter N (PDF → outline + fidelity checklist) |
-| `/webnotes-html <N>` | Write HTML page for chapter N |
+| `/webnotes-outline <N>` | Outline chapter N (source → outline + fidelity checklist) |
+| `/webnotes-html <N>` | Write HTML page for chapter N (opens with «Η Ουσία σε 60″») |
 | `/webnotes-quiz <N>` | Write per-section quizzes for chapter N |
 | `/webnotes-review <N>` | **Mandatory reviewer pass** — verify against source |
-| `/webnotes-examprep` | Build/enhance `exam_prep.html` from past exams + assignments |
+| `/webnotes-examprep` | Build/enhance `exam_prep.html` from the mined patterns |
 | `/webnotes-checklist` | Final QA across the site |
 
 ### Typical sequence
 
 ```
-/webnotes-start              (confirm chapter plan)
-/webnotes-resume             (scaffold shared assets)
-/webnotes-outline 1
-/webnotes-html 1
-/webnotes-quiz 1
-/webnotes-review 1
-/webnotes-outline 2
-...
-/webnotes-examprep            (if you have past exams / assignments)
+/webnotes-start          (goal mode + discovery)
+/webnotes-mine           (if past exams exist — confirm tiers & hide-list)
+/webnotes-resume         (scaffold shared assets)
+/webnotes-outline 1 → /webnotes-html 1 → /webnotes-quiz 1 → /webnotes-review 1
+...repeat per chapter...
+/webnotes-examprep
 /webnotes-checklist
 ```
 
-Each command tells you what to run next — no memorizing.
+---
+
+## 🤖 Multi-agent orchestration
+
+Role definitions in `agents/` (registered automatically as Claude Code subagents;
+paste-able role prompts everywhere else):
+
+- **webnotes-exam-miner** — past papers → `_build/exam_patterns.md`
+- **webnotes-chapter-writer** — outline → HTML + quiz (owns only its `topicN` files)
+- **webnotes-reviewer** — **fresh context**, sees only source + HTML + checklist,
+  patches omissions objectively
+
+Platform mapping, parallelism and file-ownership rules:
+`skills/webnotes-builder/references/13-orchestration.md`. On session-based platforms
+(Gemini, chat apps) the same roles map to separate sessions — the isolation of the
+reviewer is what catches omissions.
 
 ---
 
-## 📂 Extension layout
+## 📂 Repo layout
 
 ```
 webnotes-builder/
-├── gemini-extension.json                ← manifest
-├── GEMINI.md                            ← auto-loaded context primer
-├── README.md
-├── AGENT_INTEGRATION.md                 ← non-Gemini agent setup
-├── commands/                            ← Gemini slash commands (9 TOML files)
-│   ├── webnotes-start.toml
-│   ├── webnotes-resume.toml
-│   ├── webnotes-status.toml
-│   ├── webnotes-outline.toml
-│   ├── webnotes-html.toml
-│   ├── webnotes-quiz.toml
-│   ├── webnotes-review.toml
-│   ├── webnotes-examprep.toml           ⭐ exam-prep page
-│   └── webnotes-checklist.toml
+├── .claude-plugin/plugin.json           ← Claude Code plugin manifest
+├── gemini-extension.json                ← Gemini CLI extension manifest
+├── GEMINI.md                            ← auto-loaded context primer (Gemini)
+├── PROMPT.md                            ← universal bootstrap (local LLMs / any agent)
+├── AGENT_INTEGRATION.md                 ← per-platform setup
+├── agents/                              ← role subagents (Claude Code + paste-able)
+│   ├── webnotes-exam-miner.md
+│   ├── webnotes-chapter-writer.md
+│   └── webnotes-reviewer.md
+├── commands/                            ← slash commands: *.md (Claude) + *.toml (Gemini)
 ├── skills/
-│   └── webnotes-builder/                ← Agent Skill (works standalone)
-│       ├── SKILL.md                     ← YAML frontmatter + body
-│       ├── AGENTS.md
-│       ├── references/                  ← 11 docs (progressive disclosure)
-│       │   ├── 01-workflow.md
-│       │   ├── 02-research.md
-│       │   ├── 03-design-system.md
-│       │   ├── 04-html-components.md
-│       │   ├── 05-quiz-format.md
-│       │   ├── 06-interactivity.md
-│       │   ├── 07-checklist.md
+│   └── webnotes-builder/
+│       ├── SKILL.md                     ← the full skill spec
+│       ├── AGENTS.md                    ← generic-agent entry point
+│       ├── references/                  ← 13 docs (progressive disclosure)
+│       │   ├── 01-workflow.md … 07-checklist.md
 │       │   ├── 08-fidelity.md           ⭐ no silent omissions
 │       │   ├── 09-chunked-execution.md  ⭐ multi-session workflow
 │       │   ├── 10-reviewer-pass.md      ⭐ verification loop
-│       │   └── 11-exam-prep.md          ⭐ exam-prep page + Exam Focus boxes
-│       └── assets/                      ← templates copied to user workspace
-│           ├── chapter.html
-│           ├── index.html
-│           ├── interactive-quiz.html
+│       │   ├── 11-exam-prep.md          ⭐ exam-prep page (PASS + MASTER templates)
+│       │   ├── 12-exam-mining.md        ⭐ past-exam pattern analysis
+│       │   └── 13-orchestration.md      ⭐ multi-agent roles
+│       └── assets/                      ← templates copied to the course workspace
+│           ├── chapter.html             (with «Η Ουσία σε 60″» opener)
+│           ├── index.html               (grouped hub + exam-first hero card)
+│           ├── exam-prep.html           (PASS-mode skeleton)
+│           ├── interactive-quiz.html · flashcards.html
 │           ├── styles/{base,layout,components,quiz}.css
-│           ├── js/{nav,quiz-loader,interactive_quiz}.js
-│           └── data/questions.js
-└── scripts/                             ← helper shell scripts
-    ├── new-state.sh
-    └── verify-fidelity.sh
+│           ├── js/{nav,quiz-loader,interactive_quiz,flashcards}.js
+│           └── data/{questions,flashcards}.js
+└── scripts/                             ← new-state.sh · verify-fidelity.sh
 ```
-
----
 
 ## 🎯 Output in your course directory
 
 ```
 ~/uni/algorithms-course/
-├── slides/                              ← (untouched) source PDFs
-├── exams/ · assignments/                ← (untouched) exam material, if any
-├── _build/                              ← agent's working state ONLY
-│   ├── STATE.md                         ← progress tracker
-│   ├── topic1_outline.md
-│   ├── topic1_fidelity.md
-│   ├── examprep_outline.md
-│   └── ...
-├── index.html                           ← course hub
-├── topic1_bigo.html                     ← chapters (at the root, next to index.html)
-├── topic2_recursion.html
-├── ...
-├── exam_prep.html                       ← exam prep (if exam material exists)
-├── interactive_quiz.html                ← cross-chapter test
-├── styles/{base,layout,components,quiz}.css
-├── js/{nav,quiz-loader,interactive_quiz}.js
-└── data/questions.js
+├── slides/ · exams/ · assignments/      ← (untouched) source material
+├── _build/                              ← agent state: STATE.md, exam_patterns.md,
+│                                          outlines, fidelity checklists
+├── index.html                           ← course hub (PASS: exam-first hero card)
+├── topic1_<slug>.html …                 ← chapter pages (root, next to index.html)
+├── exam_prep.html                       ← model answers / solved families
+├── interactive_quiz.html · flashcards.html
+├── styles/ · js/ · data/
 ```
 
 Preview: `npx serve .` → http://localhost:3000
@@ -173,121 +188,34 @@ Preview: `npx serve .` → http://localhost:3000
 
 ## ✨ Per-chapter contents
 
-- **Hero** — title, summary, keyword chips
-- **Sticky TOC** — section navigation
-- **8–14 sections**, each with:
-  - Prose explanation (your language)
-  - Annotated, syntax-highlighted code/pseudocode
-  - ASCII or SVG diagrams
-  - Tip / Warning / Mnemonic / Anti-pattern boxes
-  - Comparison tables, struct visualizations
-  - **Per-section quiz**
-- **Unique color theme** per chapter
-- **Dark-mode, mobile responsive**
+- **«Η Ουσία σε 60″»** — intuition-first opener: what it does, the mental model,
+  works-well-when vs fails-when, «για τις εξετάσεις θυμήσου»
+- **Hero + sticky TOC**, 8–14 sections, each with prose, annotated code/pseudocode,
+  CSS/SVG diagrams, tip/warning/mnemonic boxes, comparison tables, **per-section quiz**
+- **🎯 Exam Focus boxes** linking to the matching solved exercise/model answer
+- Unique accent color per chapter · dark/light themes · mobile responsive
 
-Cross-chapter quiz aggregates all questions into a graded test.
-
----
-
-## 🎯 Exam prep (new in 1.2)
-
-When the course folder contains past exams (`exams/`, photos/PDFs of papers), assignments, or exercise sets, the build includes an **exam-prep page**:
-
-- **Δομή εξέτασης** — typical structure + time strategy
-- **Θεωρία-Flash** — every recurring short-answer theory pair, with ready 2-line answers
-- **One solved section per exercise family** — full statement → annotated solution → "τα σημεία που βαθμολογούνται" → a variant for generalization
-- **«Τι θα τυπώσει;» drills** — reveal-answer trace questions
-- **Assignments bridge** — maps each exercise family to the *idea* the student already implemented in the assignments
-- **🎯 Exam Focus boxes** inside the chapter pages, linking to the matching solved exercise
-
-Two golden rules (enforced by the QA checklist):
-1. Everything is presented as **generic exercises** — never "this fell in June 2025".
-2. The bridge teaches **patterns**, never one student's specific implementation or file names.
-
-Full spec: `skills/webnotes-builder/references/11-exam-prep.md`.
-
----
-
-## 🔬 Suitable subjects
-
-| Subject | Components emphasized |
-|---|---|
-| Operating Systems / Systems Programming | Code blocks, struct diagrams, race-condition timelines |
-| Algorithms / Data Structures | Pseudocode, complexity tables, execution traces |
-| Mathematics | MathJax formulas, theorem boxes, SVG plots |
-| **Logic Programming (Prolog, Datalog)** | Operator tables, unification trees, resolution |
-| Networking | Protocol stacks, packet formats, sequence diagrams |
-| Databases | ER diagrams, query plans, transaction sequences |
-| Probability / Statistics | Distribution plots, formulas |
-| Languages / Linguistics | Vocabulary, grammar, conjugation tables |
+Cross-chapter quiz aggregates all questions (PASS mode: filtered by the
+`window.quizSyllabus` whitelist). Flashcards workspace aggregates theory Q&A.
 
 ---
 
 ## 🛡️ Content fidelity (the killer feature)
 
-A common AI failure mode: silent omission. Agent decides "this operator is rare, skip" — student misses exam content.
-
-This extension prevents that via:
-
-1. **Mandatory fidelity checklist** — `_build/topicN_fidelity.md` lists every concept, operator, warning, example, definition from source — BEFORE writing HTML.
-2. **Item-by-item tracking** — HTML writing ticks each item.
-3. **Reviewer pass** — re-reads source PDF, grep-checks HTML, patches missing items.
-4. **Coverage stats** — "23/23 operators documented ✅" reported back to you.
-
-Full protocol: `skills/webnotes-builder/references/08-fidelity.md` and `references/10-reviewer-pass.md`.
+1. **Mandatory fidelity checklist** per chapter — every concept, operator, warning,
+   example from the source, BEFORE writing HTML (PASS mode: out-of-scope items listed
+   visibly as skipped).
+2. **Item-by-item tracking** while writing.
+3. **Reviewer pass** — a fresh context re-reads the source and patches gaps.
+4. **Coverage stats** — «23/23 operators documented ✅» reported back to you.
 
 ---
 
-## 🤝 Using without Gemini CLI
+## 🔬 Suitable subjects
 
-The extension is also a valid standalone Agent Skill:
-
-```bash
-cp -r webnotes-builder my-course/
-cd my-course
-# Then in your agent (Claude / Cursor / etc):
-"Read webnotes-builder/skills/webnotes-builder/SKILL.md and build the course notes."
-```
-
-Per-platform setup: `AGENT_INTEGRATION.md`.
-
----
-
-## 📖 Example session — Prolog course
-
-```text
-$ cd ~/uni/prolog-course/
-$ ls slides/
-01-intro.pdf  02-unification.pdf  03-lists.pdf  04-operators.pdf  05-cut.pdf
-
-$ gemini
-> /webnotes-start
-[agent runs discovery → proposes 5-chapter plan]
-> Confirmed. Proceed.
-
-[scaffolding done, session ends with "next: /webnotes-outline 1"]
-
-> /webnotes-outline 1
-[reads slides/01-intro.pdf → writes outline + 23-item fidelity checklist]
-
-> /webnotes-html 1
-[writes topic1_intro.html, ticks 23/23 items]
-
-> /webnotes-quiz 1
-[adds quiz data for chapter 1]
-
-> /webnotes-review 1
-[re-reads PDF, finds 2 missing items, patches HTML]
-
-> /webnotes-outline 2
-... [repeat for chapters 2-5]
-
-> /webnotes-checklist
-[final QA, reports coverage stats]
-
-$ npx serve .
-# open http://localhost:3000 — done!
-```
+CS/systems, algorithms, math, logic programming (Prolog), networking, databases,
+probability/statistics, data mining/ML, languages — the component library adapts
+(code blocks vs MathJax vs operator tables vs protocol diagrams).
 
 ---
 
@@ -295,16 +223,18 @@ $ npx serve .
 
 | Issue | Fix |
 |---|---|
-| Agent can't read PDFs | `pdftotext slides/*.pdf` first |
+| Agent can't read PDFs | `pdftotext -layout slides/*.pdf` first (OCR photos with `tesseract`) |
 | Generated pages look shallow | "follow `references/08-fidelity.md` strictly" |
-| No styling | Confirm `styles/base.css` copied to course root |
+| Exam prep feels generic | Run `/webnotes-mine` first — it must cite `_build/exam_patterns.md` |
+| No styling | Confirm all four `styles/*.css` copied to course root |
 | Quizzes missing | `data/questions.js` must load before `js/quiz-loader.js` |
 | Agent forgets state | `/webnotes-resume` |
 | Want to redo chapter N | Edit STATE.md, delete `_build/topicN_*` + `topicN_*.html` |
-| Extension not recognized | `gemini extensions list`; re-install if missing |
 
 ---
 
 ## 📜 License
 
-MIT. Originally built for the K24 Systems Programming course (NKUA), generalized for any technical subject.
+MIT. Originally built for the K24 Systems Programming course (NKUA); the PASS mode and
+exam mining were battle-tested on a Data Mining course. Generalized for any technical
+subject.

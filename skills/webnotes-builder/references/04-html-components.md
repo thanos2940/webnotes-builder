@@ -444,9 +444,10 @@ For the Interactive Quiz card (special — purple-themed):
 For chapters that need math, add to `<head>` AFTER the base.css link:
 
 ```html
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 ```
+
+Do NOT add a polyfill.io script — that domain was compromised in 2024; MathJax alone suffices.
 
 Then in body:
 - Inline: `\( x^2 + y^2 = z^2 \)`
@@ -573,7 +574,75 @@ Reuses quiz CSS + the global `toggleAnswer()` from quiz-loader.js — no extra J
 
 `id` unique per item (`tq1`, `tq2`, ...).
 
-### Exam Prep hub card (index.html — orange, before the quiz card)
+### Exam frequency badge (`.exam-badge`)
+
+Small chip marking recurrence evidence from `_build/exam_patterns.md` — used next to
+headings, table captions, and model-answer questions. Only with `Attribution: dated`
+(see `12-exam-mining.md` §5), and only when the frequency matrix backs the claim.
+
+```html
+<h2>Ο Πίνακας Πολυπλοκότητας <span class="exam-badge">πέφτει σίγουρα</span></h2>
+<span class="exam-badge">2023·Σεπτ</span>  <span class="exam-badge">3/4 χρόνια</span>
+```
+
+CSS (page-level, included in the exam-prep style block — `11-exam-prep.md` §5):
+
+```css
+.exam-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);background:var(--ydim);border:1px solid rgba(227,179,65,.3);border-radius:20px;padding:2px 9px;margin-left:6px;vertical-align:middle}
+```
+
+### Model-answer card (`.qa-card`) — the PASS-mode workhorse
+
+One card per recurring theory question: question header (`.qa-q` + `.qno` +
+optional `.exam-badge`), then a two-column `.qa-layout` body — `.qa-main-ans`
+(exam-register model answer, reproducible on paper for full marks) and
+`.qa-side-notes` (the «💡 Για Αρχάριους» jargon-decoder column). Full anatomy and
+CSS: `11-exam-prep.md` §4b.
+
+```html
+<div class="qa-card">
+  <div class="qa-q"><span class="qno">Q1.</span><span>Περιγράψτε τον K-means. Τι βελτιστοποιεί;
+    <span class="exam-badge">2024·Ιούν</span></span></div>
+  <div class="qa-a">
+    <div class="qa-layout">
+      <div class="qa-main-ans"> <!-- numbered steps, MathJax formula, .compare pros/cons --> </div>
+      <div class="qa-side-notes">
+        <div class="side-notes-header">💡 Για Αρχάριους</div>
+        <div class="side-notes-concept">
+          <div class="concept-title">🎯 SSE</div>
+          <p class="concept-desc">Το άθροισμα των τετραγωνικών αποστάσεων από το κέντρο — όσο μικρότερο, τόσο πιο συμπαγείς οι ομάδες.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Exam-first hub hero card (index.html — PASS mode, FIRST card, full-width)
+
+In PASS goal mode the exam-prep card leads the grid and spans all columns:
+
+```html
+<a href="exam_prep.html" class="topic-card" style="grid-column:1/-1; border-color: var(--green);
+   background: linear-gradient(135deg, var(--surf), rgba(74,222,128,0.10));
+   flex-direction: row; align-items: center; gap: 24px; flex-wrap: wrap;">
+  <div style="font-size:3rem; line-height:1;">🎯</div>
+  <div style="flex:1; min-width:240px;">
+    <div class="topic-num" style="color: var(--green);">ΞΕΚΙΝΑ ΑΠΟ ΕΔΩ · 1-DAY PREP</div>
+    <h3 style="margin:4px 0;">Exam Prep — Πέρνα με 1 μέρα διάβασμα</h3>
+    <p style="margin:0;">Ανάλυση των παλιών θεμάτων: τα ίδια ~N ερωτήματα πέφτουν κάθε χρόνο.
+    <strong>Έτοιμες πρότυπες απαντήσεις</strong> — φτιαγμένα για αρχάριο που θέλει τη βάση.</p>
+  </div>
+  <div class="topic-tags" style="margin:0;">
+    <span class="tag" style="border-color:rgba(74,222,128,0.4); color:var(--green);">model answers</span><span class="tag">proofs</span>
+  </div>
+</a>
+```
+
+The hub hero `<p>` should also point to it: «Λίγος χρόνος μέχρι τις εξετάσεις; Ξεκίνα
+από το 🎯 Exam Prep».
+
+### Exam Prep hub card (index.html — orange, before the quiz card — MASTER mode)
 
 ```html
 <a href="exam_prep.html" class="topic-card"
@@ -587,9 +656,170 @@ Reuses quiz CSS + the global `toggleAnswer()` from quiz-loader.js — no extra J
 </a>
 ```
 
+### Theory Flashcards Hub Card (index.html)
+
+```html
+<a href="flashcards.html" class="topic-card" style="border-color: var(--purple); background: linear-gradient(135deg, var(--surf), rgba(192, 132, 252, 0.05));">
+  <div class="topic-num" style="color: var(--purple);">FLASHCARDS</div>
+  <h3>Flashcards Test 🗂️</h3>
+  <p>Κάρτες θεωρίας (ερωτήσεις ανάπτυξης) με υποδείξεις — πέρνα τες όλες μαζί σαν τεστ.</p>
+  <div class="topic-tags">
+    <span class="tag">theory</span><span class="tag">flip cards</span><span class="tag">self-test</span>
+  </div>
+</a>
+```
+
 ---
 
-## 22. Anti-patterns (don't do these)
+## 22. Interactive Theory Flashcards (In-Chapter Deck)
+
+To add inline flip cards to study specific theory questions inside a chapter page:
+1. Define a container `<div data-fc-deck="topicN"></div>` (where `topicN` is the chapter key matching the entry in `data/flashcards.js`).
+2. Load `js/flashcards.js` and `data/flashcards.js` in the `<head>` of the page:
+   ```html
+   <script src="data/flashcards.js" defer></script>
+   <script src="js/flashcards.js" defer></script>
+   ```
+
+The script will automatically render the interactive flipping card deck inside the container.
+
+---
+
+## 23. Low-level Process and Tree Diagrams (CSS-based)
+
+### A. CSS Tree Visualization
+Use for rendering visual search/recursion/binary trees without SVGs. Reuses base classes:
+```html
+<div class="tree-visual">
+  <div class="tree-level">
+    <div class="t-node root-c">
+      <span class="t-label">Root</span>
+      Node Name
+    </div>
+  </div>
+  <div class="t-branches">
+    <div class="t-branch-col">
+      <div class="t-node and-node">
+        <span class="t-label">AND</span>
+        Child A
+      </div>
+    </div>
+    <div class="t-branch-col">
+      <div class="t-node or-node">
+        <span class="t-label">OR</span>
+        Child B
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### B. Process Pipe Diagram
+Use for low-level process forks, signals, or pipes diagrams:
+```html
+<div class="pipe-diag">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div class="pipe-proc pp-parent">Parent Process</div>
+    <div class="pipe-channel">
+      <div class="pipe-tube pfd-w">write() [fd=4]</div>
+      <div style="font-size:1.2rem;color:var(--dim);">&rarr;</div>
+      <div class="pipe-tube pfd-r">read() [fd=3]</div>
+    </div>
+    <div class="pipe-proc pp-child">Child Process</div>
+  </div>
+</div>
+```
+
+---
+
+## 24. «Η Ουσία σε 60″» — essence section (chapter opener)
+
+Every chapter page opens with an intuition-first TL;DR **before** section 1 — mandatory
+in PASS goal mode, strongly recommended in MASTER mode. It answers, in ~60 seconds of
+reading: what does this thing DO, what's the mental model, when does it work/fail, and
+what must I remember for the exam. Anchor id `essence`, first entry in the TOC («🎯 Η Ουσία»).
+
+```html
+<!-- ═══ ESSENCE (intuition-first TL;DR) ═══ -->
+<section id="essence">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--gdim)">🎯</div>
+    <h2>Η Ουσία σε 60 δευτερόλεπτα</h2>
+  </div>
+
+  <div class="gbox">
+    <div class="lbl" style="color:var(--green)">ΤΙ ΚΑΝΕΙ</div>
+    Ένα δέντρο απόφασης ταξινομεί κάνοντας μια σειρά από απλές <strong>ναι/όχι
+    ερωτήσεις</strong> πάνω στα χαρακτηριστικά. Ακολουθείς το μονοπάτι από τη ρίζα
+    μέχρι ένα φύλλο — και το φύλλο σου λέει την κλάση.
+  </div>
+
+  <p style="margin-bottom:14px">
+    <strong>Διαίσθηση:</strong> σκέψου το σαν το παιχνίδι <em>«20 ερωτήσεις»</em> —
+    σε κάθε βήμα κάνεις την ερώτηση που <strong>χωρίζει καλύτερα</strong> τα δεδομένα.
+  </p>
+
+  <div class="compare">
+    <div class="good-side">
+      <div class="side-label" style="color:var(--green)">✅ Δουλεύει καλά όταν…</div>
+      <ul style="font-size:0.86rem;padding-left:18px;line-height:1.7;margin:0">
+        <li>θες μοντέλο που <strong>εξηγείται εύκολα</strong></li>
+        <li>…3-4 bullets…</li>
+      </ul>
+    </div>
+    <div class="bad-side">
+      <div class="side-label" style="color:var(--red)">❌ Αποτυγχάνει όταν…</div>
+      <ul style="font-size:0.86rem;padding-left:18px;line-height:1.7;margin:0">
+        <li>το σύνορο είναι <strong>πλάγιο</strong></li>
+        <li>…3-4 bullets…</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-icon">📝</div>
+    <div class="tip-text">
+      <strong>Για τις εξετάσεις θυμήσου:</strong> (1) …4 numbered take-aways, each one
+      a gradeable point from the exam mining… (4) …
+    </div>
+  </div>
+</section>
+```
+
+Rules:
+- The four parts are fixed: ΤΙ ΚΑΝΕΙ gbox → intuition paragraph (an everyday metaphor)
+  → works/fails `.compare` → «Για τις εξετάσεις θυμήσου» tip with numbered points.
+- Zero formulas in the essence section — words and metaphors only.
+- The exam tip's numbered points come from `_build/exam_patterns.md` when it exists.
+- No `.section-quiz` here — quizzes start with the real sections.
+
+---
+
+## 25. Hub group dividers (index.html — grouped course map)
+
+When the course has natural modules (e.g. Classification / Association / Clustering),
+group the topic cards with full-width labeled dividers instead of one flat list. Also
+use a `BACKGROUND` divider for intro/prerequisite chapters so PASS-mode students see
+what's examinable at a glance.
+
+```html
+<!-- ═══ ① CLASSIFICATION ═══ -->
+<div class="grid-group" style="grid-column:1/-1; display:flex; align-items:center; gap:14px; margin:22px 0 -6px;">
+  <span style="font-family:'JetBrains Mono',monospace; font-size:0.85rem; letter-spacing:3px;
+        color:var(--green); text-transform:uppercase;">① Classification</span>
+  <span style="flex:1; height:1px; background:rgba(var(--green-rgb),0.3);"></span>
+</div>
+<!-- ...topic cards of this module... -->
+```
+
+- One accent color per module (divider label + the `topic-num` of its cards).
+- Background/intro chapters get a muted divider (`color:var(--dim)`, plain border) and
+  `BACKGROUND` as their `topic-num` label.
+- In PASS mode, hidden (out-of-syllabus) chapters simply don't appear — no empty groups.
+
+---
+
+## 26. Anti-patterns (don't do these)
 
 ❌ `<pre>` and `<code>` for code blocks — they don't get the syntax highlighting.
 ❌ Inline `style="font-family: monospace"` — use the existing `.cb` class.

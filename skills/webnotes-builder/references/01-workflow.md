@@ -11,8 +11,8 @@
 Before anything else:
 
 1. Confirm you can read PDFs (try opening one). If not, ask the user to convert PDFs to markdown.
-2. Confirm `webnotes-skill/assets/` exists. If not, the skill folder is incomplete.
-3. Identify the **parent directory** — your output lives there, not inside `webnotes-skill/`.
+2. Confirm the skill's `assets/` folder exists (next to SKILL.md). If not, the skill folder is incomplete.
+3. Identify the **course workspace** — your output lives there, never inside the skill/extension folder.
 
 ---
 
@@ -41,7 +41,12 @@ A bullet list to the user:
 > - `slides/lecture2-recursion.pdf` (34 pages)
 > - `slides/lecture3-divide-conquer.pdf` (28 pages)
 > - `extra/cheatsheet.md`
+> - `exams/2023.md`, `exams/2024.md` (past papers → exam mining will run)
 > - (no existing topic*.html files)
+
+Also ask the **goal mode** question now (see SKILL.md §6): PASS (πέρνα το μάθημα
+γρήγορα — exam-pattern-driven) or MASTER (κατανόησε όλη την ύλη — full coverage).
+The answer changes Phases 2.5–6 below.
 
 ---
 
@@ -61,6 +66,28 @@ A bullet list to the user:
 Briefly state to the user what you classified the subject as, so they can correct you:
 
 > Φαίνεται μάθημα Αλγορίθμων — θα χρησιμοποιήσω pseudocode blocks, complexity tables, και recursion-tree diagrams. Σωστά;
+
+---
+
+## Phase 2.5 — Exam mining (when exam material exists)
+
+**Goal:** know what the exam actually tests BEFORE planning chapters.
+
+Follow `references/12-exam-mining.md` in full. Output: `_build/exam_patterns.md` with
+the question inventory, the family × period frequency matrix, the typical-paper
+blueprint, the Tier 1/2/3 pass plan, and the syllabus cross-check.
+
+- **PASS goal mode:** this phase is MANDATORY and its output drives Phase 3 — the
+  chapter plan covers in-scope chapters only, ordered by exam value; zero-exam-presence
+  chapters go on the hide-list (confirmed with the user, hidden from hub/nav/quiz,
+  never deleted).
+- **MASTER goal mode:** the mining output feeds Phase 6 (exam prep) and the 🎯 Exam
+  Focus boxes, but the chapter plan still covers everything.
+
+### Stop and confirm
+
+Show the user the frequency matrix + tier list + (in PASS mode) the hide-list.
+Wait for confirmation before Phase 3.
 
 ---
 
@@ -110,19 +137,22 @@ Show this plan to the user, ask: "Should I proceed with this structure? Want any
 2. Copy `assets/js/nav.js` → `../js/nav.js`
 3. Copy `assets/js/quiz-loader.js` → `../js/quiz-loader.js`
 4. Copy `assets/js/interactive_quiz.js` → `../js/interactive_quiz.js`
-5. Copy `assets/data/questions.js` → `../data/questions.js` (starts as empty stub)
-6. Create `../index.html` from `assets/index.html`:
+5. Copy `assets/js/flashcards.js` → `../js/flashcards.js`
+6. Copy `assets/data/questions.js` → `../data/questions.js` (starts as empty stub)
+7. Copy `assets/data/flashcards.js` → `../data/flashcards.js` (starts as empty stub)
+8. Create `../index.html` from `assets/index.html`:
    - Fill in course title, hero subtitle
    - Add ONE `<a class="topic-card">` per planned chapter (link target = `topic<N>_<slug>.html`
      at the workspace root, even if the file doesn't exist yet)
-   - Add the Exam Prep card (orange) if exam material exists, then the Interactive Quiz card at end
-7. Edit `../js/nav.js`:
-   - Populate the `topics` array with one entry per chapter (pick a fitting `SVG_ICONS.*` each)
-8. Optionally create `../interactive_quiz.html` from `assets/interactive-quiz.html` (works even with empty quiz data — fills as you build chapters).
+   - Add the Exam Prep card (orange) if exam material exists, then the Interactive Quiz card at end, and the Flashcards card at the end
+9. Edit `../js/nav.js`:
+   - Populate the `topics` array with one entry per chapter (pick a fitting `SVG_ICONS.*` each; keep examprep + quiz + flashcards last)
+10. Create `../interactive_quiz.html` from `assets/interactive-quiz.html`
+11. Create `../flashcards.html` from `assets/flashcards.html`
 
 ### Verification
 
-`Glob` the parent directory — confirm `index.html`, `styles/base.css`, `js/nav.js`, `js/quiz-loader.js`, `data/questions.js` all exist.
+`Glob` the parent directory — confirm `index.html`, `flashcards.html`, `styles/base.css`, `js/nav.js`, `js/quiz-loader.js`, `js/flashcards.js`, `data/questions.js`, and `data/flashcards.js` all exist.
 
 ---
 
@@ -163,9 +193,14 @@ Write each into the outline AND into the fidelity checklist (one checkbox per it
 Steps:
 1. Pick a chapter accent color (see `03-design-system.md` §2). Don't reuse what siblings use.
 2. Map outline items to sections (per Phase 3 plan).
-3. Write the chapter HTML using components from `04-html-components.md`.
-4. As you write each section, tick the corresponding fidelity items.
-5. Target 800–1500 lines depending on chapter size.
+3. Open the page with the «Η Ουσία σε 60″» essence section (see `04-html-components.md`):
+   what-it-does gbox, the intuition/mental model in plain language, works-well-when vs
+   fails-when compare, and a «Για τις εξετάσεις θυμήσου» tip. Mandatory in PASS mode.
+4. Write the chapter HTML using components from `04-html-components.md`.
+   In PASS mode: intuition and visuals first; include a formula only when the exam
+   grades it, and always translate it to words.
+5. As you write each section, tick the corresponding fidelity items.
+6. Target 800–1500 lines depending on chapter size.
 
 **Update STATE.md:** mark HTML ✅. Note which fidelity items are now covered.
 
@@ -205,12 +240,16 @@ Do not attempt all 5 sub-sessions in one tool-call run. Context bloat → qualit
 
 After all chapters are reviewed, if Discovery found past exams / assignments / exercises:
 
-1. Read `references/11-exam-prep.md` in full — it's the complete spec.
-2. Extract exam material → `_build/examprep_outline.md` + `_build/examprep_fidelity.md`,
-   group questions into exercise families, confirm the family list with the user.
-3. Build `exam_prep.html` (format/strategy, theory-flash, one solved section per family,
-   trace drills, assignments bridge) — respecting the two golden rules: no dated exam
-   references, no references to the student's specific implementation.
+1. Read `references/11-exam-prep.md` in full — it's the complete spec. Your primary
+   input is `_build/exam_patterns.md` from Phase 2.5 (families, tiers, blueprint).
+2. Extract remaining exam detail → `_build/examprep_outline.md` +
+   `_build/examprep_fidelity.md`; the family list comes from the mining matrix
+   (already confirmed with the user in Phase 2.5).
+3. Build `exam_prep.html` — PASS mode uses the model-answers-centric template
+   (strategy → primer → core facts table → recipes/mnemonics → model answers →
+   recurring proofs → skip-triage); MASTER mode uses the solved-families template.
+   Respect the attribution setting (dated badges vs generic exercises) and Rule B
+   (never reference the student's specific implementation).
 4. Add `"examprep"` quiz data, 🎯 Exam Focus boxes in mapped chapter sections,
    nav entry + orange hub card.
 

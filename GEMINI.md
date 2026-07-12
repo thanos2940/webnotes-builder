@@ -14,10 +14,19 @@ If the user asks anything like:
 
 …then activate the `webnotes-builder` skill.
 
-The skill has TWO modes, decided in Discovery:
+The skill has TWO build modes, decided in Discovery:
 - **CREATE** — no webnotes exist yet: full pipeline (scaffold → chapters → exam prep → QA)
 - **ENHANCE** — `topic*.html`/`index.html` already exist: audit the site against the
   skill's standard and upgrade the gaps in place (never regress existing content)
+
+…and TWO GOAL modes — Discovery MUST ask the user which one:
+- **PASS** («θέλω απλά να περάσω») — exam mining runs first
+  (`skills/webnotes-builder/references/12-exam-mining.md`) and drives everything:
+  in-syllabus chapters only (out-of-scope hidden, never deleted), intuition-first pages
+  opening with «Η Ουσία σε 60″», and `exam_prep.html` as the centerpiece (model answers,
+  recurring proofs, priority tiers, first full-width hub card).
+- **MASTER** — full-fidelity coverage of ALL the material; exam mining still feeds the
+  exam-prep page and the 🎯 Exam Focus boxes, but nothing is filtered out.
 
 ## Critical reading order
 
@@ -27,7 +36,8 @@ Before generating ANY HTML, read these files (in this order):
 2. **`skills/webnotes-builder/references/08-fidelity.md`** — content fidelity rules (MANDATORY)
 3. **`skills/webnotes-builder/references/09-chunked-execution.md`** — multi-session workflow
 4. **`skills/webnotes-builder/references/01-workflow.md`** — phase-by-phase process
-5. Other references as needed (HTML components, quiz format, design system)
+5. **`skills/webnotes-builder/references/12-exam-mining.md`** — when past exams exist (before planning)
+6. Other references as needed (HTML components, quiz format, design system, exam prep, orchestration)
 
 ## Core principles (always apply)
 
@@ -40,7 +50,9 @@ Before generating ANY HTML, read these files (in this order):
 
 ## Slash commands available
 
-- `/webnotes-start` — kicks off discovery, proposes chapter plan
+- `/webnotes-start` — kicks off discovery, asks goal mode, proposes chapter plan
+- `/webnotes-mine` — mine past exams → `_build/exam_patterns.md` (families, frequency
+  matrix, pass-plan tiers) — run BEFORE the plan when exam material exists
 - `/webnotes-resume` — read `_build/STATE.md`, continue where left off
 - `/webnotes-status` — show current build state
 - `/webnotes-outline <N>` — outline chapter N (read source, build fidelity checklist)

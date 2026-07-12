@@ -9,6 +9,7 @@
 A **work item** is the smallest unit of meaningful progress. Examples:
 
 - Discovery + plan (entire course)
+- Exam mining (entire course — `12-exam-mining.md`; before the plan is final in PASS mode)
 - Scaffolding (entire course)
 - Outline for chapter N
 - HTML draft for chapter N
@@ -33,9 +34,12 @@ Located at `<course-folder>/_build/STATE.md`. This is the single source of truth
 ## Course metadata
 - Title: <course name>
 - Language: <el | en | mixed>
+- Goal: <PASS | MASTER>
+- Attribution: <dated | generic>
 - Depth: <terse | standard | encyclopedic>
 - Source: <slides/ or wherever PDFs live>
-- Skill version: 1.1.0
+- Syllabus scope: <all | in-scope: [...] hidden: [...]>
+- Skill version: 2.0.0
 - Started: 2026-05-15
 
 ## Phases
@@ -170,15 +174,23 @@ For each chapter, **5 separate sessions** is the gold standard:
 
 **Time:** ~30 min
 
+### Exam-mining session (BEFORE the chapter plan is final)
+
+- **EP-0 (mining):** read all past exam material → `_build/exam_patterns.md` per
+  `references/12-exam-mining.md` (inventory, family matrix, blueprint, pass-plan tiers,
+  syllabus cross-check). Confirm tiers + hide-list with the user. In PASS goal mode
+  this session is mandatory and precedes Phase 3 planning.
+
 ### Exam-prep sessions (after ALL chapters are reviewed)
 
 If the workspace has past exams / assignments / exercises, run 1–2 extra sessions per
 `references/11-exam-prep.md`:
 
-- **EP-1 (outline):** extract exam material → `_build/examprep_outline.md` +
-  `_build/examprep_fidelity.md`, group questions into exercise families, confirm with user.
-- **EP-2 (build):** write `exam_prep.html`, add `examprep` quiz data, place 🎯 Exam Focus
-  boxes in mapped chapter sections, wire nav + hub card.
+- **EP-1 (outline):** extract remaining exam detail → `_build/examprep_outline.md` +
+  `_build/examprep_fidelity.md` (families already confirmed in EP-0).
+- **EP-2 (build):** write `exam_prep.html` (PASS or MASTER template per goal mode),
+  add `examprep` quiz data, place 🎯 Exam Focus boxes in mapped chapter sections,
+  wire nav + hub card (exam-first full-width card in PASS mode).
 
 **Time:** ~60-120 min total. Track as its own phase row in STATE.md.
 

@@ -1,0 +1,11 @@
+{
+  "name": "webnotes-builder",
+  "version": "2.0.0",
+  "description": "Converts course material (PDF slides, markdown, txt, images, past exams, assignments) into a complete interactive HTML study site. Two goal modes: PASS (mines past-exam patterns, builds an exam-prep page with model answers as the centerpiece, teaches only what's needed to pass) and MASTER (full-fidelity coverage of all material). Chunked multi-session workflow with state persistence, content-fidelity guarantees, mandatory reviewer pass, and multi-agent orchestration (exam-miner / chapter-writer / reviewer subagents).",
+  "author": {
+    "name": "thanos2940"
+  },
+  "homepage": "https://github.com/thanos2940/webnotes-builder",
+  "license": "MIT",
+  "keywords": ["study-notes", "education", "exam-prep", "html", "course-notes"]
+}

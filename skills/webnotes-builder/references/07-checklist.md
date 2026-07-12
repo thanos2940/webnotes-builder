@@ -22,6 +22,23 @@ ls -la *.html styles/ js/ data/
 
 ---
 
+## A2. Goal-mode checks
+
+- [ ] STATE.md records `Goal:` and (if exam material) `Attribution:` — and the site matches
+- [ ] **PASS mode:** exam-prep card is the FIRST, full-width hub card («ΞΕΚΙΝΑ ΑΠΟ ΕΔΩ»);
+      hub hero paragraph points to it; nav has Exam Prep right after Home
+- [ ] **PASS mode:** out-of-syllabus chapters are hidden from `index.html`, `js/nav.js`
+      AND the quiz (`window.quizSyllabus` whitelist) — but their files still exist on disk
+      and STATE.md documents the hide-list
+- [ ] **PASS mode:** every chapter page opens with an `#essence` («Η Ουσία σε 60″») section
+- [ ] **PASS mode:** every Tier-1 family in `_build/exam_patterns.md` has a model answer /
+      solved exercise / written-out proof in `exam_prep.html`
+- [ ] **Attribution `dated`:** every `.exam-badge` claim is backed by the frequency matrix
+- [ ] **Attribution `generic`:** grep the site for years/sitting names — zero hits
+- [ ] **MASTER mode:** no chapter or section was filtered out for "exam irrelevance"
+
+---
+
 ## B. Per-chapter checks
 
 For EACH chapter HTML file:
@@ -133,7 +150,7 @@ Open in browser (or use Preview tool):
 - [ ] No `console.log` statements in shipped JS (unless intentional debugging)
 - [ ] No leftover Lorem Ipsum text
 - [ ] No commented-out `<!-- -->` blocks larger than 5 lines (clean up dead HTML)
-- [ ] `webnotes-skill/` directory is intact (not modified during build) — kept for re-runs
+- [ ] The `webnotes-builder/` skill/extension directory is intact (not modified during build) — kept for re-runs
 
 ---
 

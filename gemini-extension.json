@@ -1,9 +1,9 @@
 {
   "name": "webnotes-builder",
-  "version": "1.2.0",
-  "description": "Converts a folder of course material (PDF slides, markdown, past exams, assignments) into a complete interactive HTML study site — one chapter page per source file, with per-section quizzes, annotated code, CSS diagrams, an exam-prep page (solved exam-style exercises, theory flash-cards, trace drills), and a cross-chapter test. Can also enhance an existing webnotes site to this standard. Includes content-fidelity guarantees so nothing from the source is silently dropped, and a chunked multi-session workflow with state persistence. Works for CS, math, algorithms, networking, databases, logic programming, and other technical subjects.",
-  "author": "K24 student community",
+  "version": "2.0.0",
+  "description": "Converts a folder of course material (PDF slides, markdown, txt, images, past exams, assignments) into a complete interactive HTML study site. Two goal modes: PASS (mines past-exam patterns, builds an exam-prep page with model answers as the centerpiece, teaches only what's needed to pass) and MASTER (full-fidelity beginner-friendly coverage of all material). One chapter page per source file with an intuition-first essence opener, per-section quizzes, annotated code, CSS diagrams, flashcards, and a cross-chapter test. Can also enhance an existing webnotes site to this standard. Includes content-fidelity guarantees, a chunked multi-session workflow with state persistence, and multi-agent role orchestration. Works for CS, math, algorithms, networking, databases, logic programming, and other technical subjects.",
+  "author": "thanos2940",
   "license": "MIT",
-  "homepage": "https://github.com/your-org/webnotes-builder",
+  "homepage": "https://github.com/thanos2940/webnotes-builder",
   "contextFileName": "GEMINI.md"
 }

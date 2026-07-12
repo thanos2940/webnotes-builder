@@ -20,6 +20,12 @@ The reviewer pass catches these.
 
 **A reviewer agent reads the source PDF and the generated HTML, and treats them as if they were written by different people. The reviewer's job: find every fact in the PDF that isn't in the HTML.**
 
+**PASS-goal-mode scope:** when STATE.md says `Goal: PASS`, the fidelity contract is the
+confirmed syllabus, not the whole source. The reviewer checks (a) every in-scope
+checklist item is covered, AND (b) every out-of-scope omission is *explicitly listed*
+under `## Skipped (out of syllabus)` in `_build/topicN_fidelity.md`. An omission that
+is neither covered nor listed is a fidelity failure in both modes.
+
 ---
 
 ## 3. Single-agent reviewer protocol

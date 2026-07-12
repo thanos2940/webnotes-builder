@@ -8,6 +8,31 @@
     let selectedTopics = new Set();
     let isListMode = false;
 
+    // Optional syllabus filter (PASS goal mode). Define in a page <script> BEFORE this file:
+    //   window.quizSyllabus = {
+    //     allowedTopics: ['topic1', 'topic3', ...],   // whitelist; omit = all topics
+    //     excludedSections: ['topic5/bbn', ...],       // "topicId/sectionId" blacklist
+    //     excludeIfText: ['hyperclique', ...]          // drop questions containing these strings
+    //   };
+    // If window.quizSyllabus is undefined, everything in quizData is included.
+    const syllabus = window.quizSyllabus || null;
+
+    function isTopicInSyllabus(topicId) {
+        if (!syllabus || !syllabus.allowedTopics) return true;
+        return syllabus.allowedTopics.includes(topicId);
+    }
+
+    function isQuestionInSyllabus(topicId, sectionId, q) {
+        if (!isTopicInSyllabus(topicId)) return false;
+        if (syllabus && syllabus.excludedSections &&
+            syllabus.excludedSections.includes(topicId + '/' + sectionId)) return false;
+        if (syllabus && syllabus.excludeIfText) {
+            const qText = (q.q || '').toLowerCase();
+            if (syllabus.excludeIfText.some(t => qText.includes(t.toLowerCase()))) return false;
+        }
+        return true;
+    }
+
     // DOM Elements
     const startScreen = document.getElementById('start-screen');
     const quizInterface = document.getElementById('quiz-interface');
@@ -36,6 +61,7 @@
         }
 
         Object.keys(db).forEach(topicId => {
+            if (!isTopicInSyllabus(topicId)) return;
             const topicName = topicNames[topicId] || (topicId.charAt(0).toUpperCase() + topicId.slice(1).replace(/_/g, ' '));
             const btn = document.createElement('button');
             btn.className = 'topic-btn';
@@ -71,9 +97,10 @@
         quizQuestions = [];
         selectedTopics.forEach(topicId => {
             const topicData = db[topicId];
-            Object.values(topicData).forEach(section => {
+            Object.entries(topicData).forEach(([sectionId, section]) => {
                 if (section.questions) {
                     section.questions.forEach(q => {
+                        if (!isQuestionInSyllabus(topicId, sectionId, q)) return;
                         quizQuestions.push({
                             ...q,
                             topicName: section.title,

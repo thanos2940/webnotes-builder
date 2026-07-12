@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<!--
+  📝 EXAM PREP TEMPLATE — copy to ../exam_prep.html (workspace root, next to index.html).
+  Full spec: references/11-exam-prep.md. Content source: _build/exam_patterns.md
+  (built per references/12-exam-mining.md).
+
+  TWO templates share this skeleton — keep the sections matching the goal mode:
+    PASS mode   → strategy · primer · core-facts · howto · answers · proofs · skip
+                  (+ trace / bridge if the course has code-trace questions / assignments)
+    MASTER mode → format · theory · one section per solved exercise family · trace · bridge
+                  (see references/11-exam-prep.md §3b — rename/replace sections below)
+
+  Required edits:
+    [[LANG]] [[COURSE_LABEL]] [[FOOTER_TEXT]]  - as in chapter.html
+    [[HERO_INTRO]]      - one paragraph: what the mining found, in plain language
+    [[PASS_LINE]]       - e.g. "50/100"
+    All [[SECTION_*]] bodies per the spec.
+
+  Attribution: use .exam-badge ONLY when STATE.md says `Attribution: dated`, and only
+  for claims backed by the frequency matrix. With `generic`, remove all badges/dates.
+
+  MathJax is preloaded (model answers usually need formulas). Remove if unused.
+-->
+<html lang="[[LANG]]">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Prep · [[COURSE_LABEL]]</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css">
+<style>
+:root{
+  --bg:#0d1117;--bg-rgb:13,17,23;--surf:#161b22;--surf2:#1c2230;--border:#30363d;
+  --blue:#58a6ff;--blue-rgb:88,166,255;--bdim:#0d1f40;
+  --green:#3fb950;--green-rgb:63,185,80;--gdim:#0d2218;
+  --yellow:#e3b341;--ydim:#2d2208;
+  --red:#f85149;--rdim:#2d1010;
+  --cyan:#39d4c8;--cdim:#0a2422;
+  --purple:#bc8cff;--purple-rgb:188,140,255;--pdim:#1a1040;
+  --orange:#f0883e;--orange-rgb:240,136,62;--odim:#2d1800;
+  --txt:#e6edf3;--muted:#8b949e;--dim:#6e7681;
+}
+.hero{background:linear-gradient(150deg,#0d1117 0%,var(--gdim) 55%,#0d1117 100%)}
+.hero::after{
+  content:'$ pass --exam';
+  position:absolute;right:32px;bottom:16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(1rem,3vw,2.2rem);
+  color:rgba(63,185,80,.06);
+  pointer-events:none;font-weight:700;
+}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.good-side{background:var(--gdim);border:1px solid rgba(63,185,80,.2);border-radius:8px;padding:12px}
+.bad-side{background:var(--rdim);border:1px solid rgba(248,81,73,.2);border-radius:8px;padding:12px}
+.side-label{font-size:0.8125rem;font-family:'JetBrains Mono',monospace;letter-spacing:1px;font-weight:700;margin-bottom:0.5rem;text-transform:uppercase}
+/* Exercise statement box (solved exercise families) */
+.exam-stmt{background:var(--surf);border:1px solid var(--border);border-left:4px solid var(--orange);border-radius:8px;padding:16px 20px;margin:14px 0;overflow-wrap:anywhere}
+.exam-stmt .stmt-label{font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:8px}
+/* Q&A model-answer card (references/11-exam-prep.md §4b) */
+.qa-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:0;margin:18px 0;overflow:hidden}
+.qa-q{background:var(--surf2);padding:14px 20px;font-weight:700;color:var(--txt);font-size:1.02rem;border-left:4px solid var(--green);display:flex;gap:10px;align-items:flex-start}
+.qa-q .qno{color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:700;flex-shrink:0}
+.qa-a{padding:16px 22px}
+.exam-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:1px;text-transform:uppercase;color:var(--yellow);background:var(--ydim);border:1px solid rgba(227,179,65,.3);border-radius:20px;padding:2px 9px;margin-left:6px;vertical-align:middle}
+details.selftest{background:#010409;border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:12px 0}
+details.selftest summary{cursor:pointer;color:var(--purple);font-weight:600;font-size:0.92rem}
+details.selftest[open] summary{margin-bottom:8px}
+.keyfact{background:linear-gradient(135deg,rgba(63,185,80,.08),rgba(63,185,80,.03));border:1px solid rgba(63,185,80,.3);border-radius:10px;padding:12px 16px;margin:12px 0}
+/* Beginner side-notes column */
+.qa-layout{display:grid;grid-template-columns:1fr;gap:20px}
+@media (min-width:992px){.qa-layout{grid-template-columns:1.25fr 1fr}}
+.qa-main-ans{display:flex;flex-direction:column;justify-content:center}
+.qa-side-notes{background:rgba(88,166,255,0.04);border:1px dashed rgba(88,166,255,0.2);border-radius:10px;padding:16px;font-size:0.88rem;line-height:1.6;color:var(--muted);display:flex;flex-direction:column;gap:12px}
+.side-notes-header{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--blue);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:4px;border-bottom:1px solid rgba(88,166,255,0.15);padding-bottom:6px}
+.side-notes-concept{border-bottom:1px dashed rgba(255,255,255,0.08);padding-bottom:10px}
+.side-notes-concept:last-child{border-bottom:none;padding-bottom:0}
+.concept-title{color:var(--txt);font-weight:600;font-size:0.88rem;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.concept-desc{margin:0;font-size:0.84rem;color:var(--muted)}
+</style>
+<script src="js/nav.js" defer></script>
+<script src="data/questions.js" defer></script>
+<script src="js/quiz-loader.js" defer></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div id="site-nav"></div>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<div class="hero">
+  <div class="hero-label">[[COURSE_LABEL]] · Exam Prep</div>
+  <h1>🎯 <em>Exam Prep</em></h1>
+  <p>[[HERO_INTRO]]</p>
+  <div class="chips">
+    <span class="chip">model answers</span>
+    <span class="chip">patterns</span>
+    <span class="chip">strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TOC — one <a> per section below ═══════════════════════ -->
+<nav class="toc">
+  <a href="#strategy">Στρατηγική</a>
+  <a href="#primer">Τα Βασικά</a>
+  <a href="#core-facts">Ο Πίνακας</a>
+  <a href="#howto">Συνταγές</a>
+  <a href="#answers">Πρότυπες Απαντήσεις</a>
+  <a href="#proofs">Αποδείξεις</a>
+  <a href="#skip">Triage</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ═══ 1. STRATEGY — the mining blueprint in plain language ═══ -->
+<section id="strategy">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--gdim)">🧭</div>
+    <h2>Στρατηγική: πώς να περάσεις</h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:14px">[[Τι δείχνουν τα παλιά θέματα: πόσα
+  θέματα, ποιες οικογένειες επανέρχονται, το pass-plan αριθμητικά — π.χ. «τα Tier-1
+  θέματα αθροίζουν ~65 μονάδες → μαθαίνοντάς τα τέλεια περνάς τη βάση [[PASS_LINE]] με
+  περιθώριο». Κλείσε με στρατηγική χρόνου μέσα στην εξέταση.]]</p>
+  <div class="keyfact">[[Το ένα εύρημα που αλλάζει το διάβασμα — π.χ. «τα ίδια ~8
+  ερωτήματα πέφτουν κάθε χρόνο».]]</div>
+  <div class="section-quiz" data-topic="examprep" data-section="strategy"></div>
+</section>
+
+<!-- ═══ 2. PRIMER — for the student who skipped the lectures ═══ -->
+<section id="primer">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--bdim)">🧱</div>
+    <h2>Τα απολύτως βασικά (για αρχάριο)</h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:14px">[[5–10 βασικές έννοιες σε απλή γλώσσα
+  — ό,τι χρειάζεται για να βγάζουν νόημα οι πρότυπες απαντήσεις. Μία οπτικοποίηση.]]</p>
+  <div class="section-quiz" data-topic="examprep" data-section="primer"></div>
+</section>
+
+<!-- ═══ 3. CORE FACTS — the recurring "memorize me" table ═══ -->
+<section id="core-facts">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--ydim)">📊</div>
+    <h2>[[Ο Πίνακας που ζητάει η εξέταση]] <span class="exam-badge">πέφτει σίγουρα</span></h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:14px">[[Complexity table / operator table /
+  formula sheet — ένας πίνακας <code>&lt;table class="vtbl"&gt;</code>, με βοήθημα
+  απομνημόνευσης ανά γραμμή.]]</p>
+  <div class="section-quiz" data-topic="examprep" data-section="core-facts"></div>
+</section>
+
+<!-- ═══ 4. HOWTO — recipes & mnemonics per computational family ═══ -->
+<section id="howto">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--cdim)">🛠️</div>
+    <h2>Πώς να λύνεις — Συνταγές &amp; Μνημονικά</h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:14px">[[Μία κάρτα-συνταγή ανά υπολογιστική
+  οικογένεια: βήματα → μικρό λυμένο παράδειγμα → μνημονικό → η κλασική παγίδα.]]</p>
+  <div class="section-quiz" data-topic="examprep" data-section="howto"></div>
+</section>
+
+<!-- ═══ 5. MODEL ANSWERS — one .qa-card per recurring theory question (Tier 1 first) ═══ -->
+<section id="answers">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--gdim)">✍️</div>
+    <h2>Πρότυπες Απαντήσεις (Ανάπτυξη Εξετάσεων)</h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:14px">Οι παρακάτω απαντήσεις είναι διατυπωμένες
+  με τη δομή και την ορολογία που απαιτείται γραπτώς για τη μέγιστη βαθμολόγηση.</p>
+
+  <div class="qa-card">
+    <div class="qa-q"><span class="qno">Q1.</span><span>[[Η ερώτηση όπως συνήθως
+      διατυπώνεται]] <span class="exam-badge">[[2023·Σεπτ]]</span></span></div>
+    <div class="qa-a">
+      <div class="qa-layout">
+        <div class="qa-main-ans">
+          [[Η πρότυπη απάντηση: πρόζα σε exam register, αριθμημένα βήματα για περιγραφές
+          αλγορίθμων, ο τύπος σε MathJax αν βαθμολογείται, .compare για θετικά/αρνητικά.]]
+        </div>
+        <div class="qa-side-notes">
+          <div class="side-notes-header">💡 Για Αρχάριους</div>
+          <div class="side-notes-concept">
+            <div class="concept-title">[[emoji + όρος]]</div>
+            <p class="concept-desc">[[Καθημερινή μεταφορά που αποκωδικοποιεί τον όρο.]]</p>
+          </div>
+          <!-- 2-3 concepts per answer -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- repeat .qa-card per recurring question -->
+
+  <div class="section-quiz" data-topic="examprep" data-section="answers"></div>
+</section>
+
+<!-- ═══ 6. PROOFS — every recurring proof, written for a beginner ═══ -->
+<section id="proofs">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--pdim)">📐</div>
+    <h2>Οι Αποδείξεις που πέφτουν</h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:14px">[[Ανά απόδειξη: διατύπωση → η ιδέα σε
+  μία γραμμή → η απόδειξη σε αριθμημένα βήματα → τι κοιτάει ο βαθμολογητής.]]</p>
+  <div class="section-quiz" data-topic="examprep" data-section="proofs"></div>
+</section>
+
+<!-- ═══ 7. SKIP / TRIAGE — honest deprioritization from the tier list ═══ -->
+<section id="skip">
+  <div class="sh">
+    <div class="sh-icon" style="background:var(--rdim)">⏳</div>
+    <h2>Τι να αφήσεις τελευταίο (αν σε πιέζει ο χρόνος)</h2>
+  </div>
+  <p style="color:var(--muted);margin-bottom:14px">[[Tier-3/σπάνια θέματα, καθένα με
+  fallback μιας γραμμής: «αν τελικά πέσει, γράψε τουλάχιστον αυτό».]]</p>
+  <!-- no quiz needed here -->
+</section>
+
+<!-- ═══ OPTIONAL (per course type — see references/11-exam-prep.md):
+     <section id="trace">  «Τι θα τυπώσει;» drills (§6)
+     <section id="bridge"> Από τις Εργασίες στην Εξέταση (§7)
+     MASTER mode: replace sections 1-7 with format/theory/solved-family sections (§3b) ═══ -->
+
+</div>
+
+<div class="footer">[[FOOTER_TEXT]]</div>
+</body>
+</html>

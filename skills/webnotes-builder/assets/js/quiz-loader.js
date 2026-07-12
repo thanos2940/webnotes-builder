@@ -78,5 +78,12 @@ function toggleAnswer(id, btn) {
         el.style.display = 'none';
         btn.textContent = 'Δες απάντηση';
         btn.classList.remove('active');
-    }
+}
+// Theory flashcard reveal (hint / answer) — keeps custom button labels intact
+function fcToggle(id, btn) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const hidden = el.style.display === 'none' || el.style.display === '';
+    el.style.display = hidden ? 'block' : 'none';
+    btn.classList.toggle('active', hidden);
 }

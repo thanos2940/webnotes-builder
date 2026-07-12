@@ -1,6 +1,6 @@
 ---
 name: webnotes-builder
-description: Builds OR enhances interactive HTML study notes (webnotes) from a folder of course material (PDF slides, markdown, lecture handouts, past exams, assignments). Generates one chapter page per source file with annotated code/pseudocode, CSS-based diagrams, per-section quizzes, a hub index — plus an exam-prep page (solved exam-style exercises, theory flash-cards, "what does this print?" drills) when exam material or assignments exist. Use when the user asks to "build course notes", "create webnotes", "generate study guide", "make interactive notes", "add exam prep", "φτιάξε σημειώσεις", or asks to upgrade an existing webnotes site to this standard. Works for CS, math, algorithms, networking, databases, logic programming (Prolog), and most other technical subjects.
+description: Builds OR enhances interactive HTML study notes (webnotes) from a folder of course material (PDF slides, markdown, txt, images, lecture handouts, past exams, assignments). Two goal modes — PASS (mine past-exam patterns, teach only what's needed to pass, exam-prep page with model answers as the centerpiece) and MASTER (full-fidelity coverage of all source material). Generates one chapter page per source file with an intuition-first "essence in 60 seconds" opener, annotated code/pseudocode, CSS-based diagrams, per-section quizzes, flashcards, a hub index — plus an exam-prep page (model answers, solved exam-style exercises, recurring proofs, complexity tables, trace drills) when exam material exists. Use when the user asks to "build course notes", "create webnotes", "generate study guide", "make interactive notes", "add exam prep", "φτιάξε σημειώσεις", "θέλω απλά να περάσω το μάθημα", "help me pass this exam", "analyze past exams", or asks to upgrade an existing webnotes site to this standard. Works for CS, math, algorithms, networking, databases, logic programming (Prolog), and most other technical subjects.
 license: MIT
 ---
 
@@ -27,13 +27,34 @@ This task is **too large for one session.** You will work iteratively:
    `exam_prep.html` + 🎯 Exam Focus boxes in chapters (see `references/11-exam-prep.md`)
 5. **Final wiring** session — interactive quiz, hub, QA checklist
 
-**Two modes.** Discovery also decides the mode:
+**Two build modes.** Discovery also decides the mode:
 - **CREATE** — no webnotes exist; full pipeline above.
 - **ENHANCE** — `topic*.html`/`index.html` already exist; audit the existing site against
   this skill's standard (component usage, content depth vs source, per-section quizzes,
   exam prep page, responsive rendering) and upgrade the gaps in place. Reuse the same
   per-chapter cycle for any chapter that needs deepening; never regress content the
   site already has.
+
+**Two GOAL modes** (orthogonal to the build mode — Discovery MUST ask the user which
+one they want; record it in STATE.md):
+
+- **PASS** («θέλω απλά να περάσω, έστω με 5/10») — the site is optimized for passing
+  the exam with minimal study time. Exam mining (`references/12-exam-mining.md`) runs
+  FIRST and drives everything: only exam-relevant/in-syllabus chapters are built (or
+  shown), pages are intuition-first (visuals and plain language over formulas — formulas
+  only where they are graded), every page opens with an «Η Ουσία σε 60″» essence section,
+  and `exam_prep.html` is the centerpiece: first full-width hub card («ΞΕΚΙΝΑ ΑΠΟ ΕΔΩ»),
+  model answers for every recurring question, the recurring proofs, priority tiers and a
+  "τι να αφήσεις τελευταίο" triage. Out-of-scope chapters are HIDDEN (hub/nav/quiz),
+  never deleted.
+- **MASTER** (κατανόησε όλη την ύλη) — the site explains ALL the professor's material,
+  independent of exam frequency: full fidelity coverage of every source file, so the
+  site is a central, beginner-friendly explanation of the whole course. Exam mining
+  still feeds the exam-prep page and 🎯 Exam Focus boxes, but nothing is filtered out.
+
+In PASS mode the fidelity contract (`08-fidelity.md`) is scoped to the confirmed
+syllabus: out-of-scope items are listed under `## Skipped (out of syllabus)` in the
+fidelity checklist — excluded *visibly*, never silently.
 
 You may complete multiple of these in one user message if context allows, but track progress in `_build/STATE.md` (see `references/09-chunked-execution.md`).
 
@@ -52,8 +73,10 @@ Before generating any HTML, read these in order:
 7. **`references/08-fidelity.md`** — content fidelity guarantees (MANDATORY)
 8. **`references/09-chunked-execution.md`** — multi-session workflow + state tracking
 9. **`references/10-reviewer-pass.md`** — verification loop to catch omissions
-10. **`references/11-exam-prep.md`** — exam-prep page + Exam Focus boxes (when exam material exists)
-11. `references/07-checklist.md` — final QA
+10. **`references/12-exam-mining.md`** — past-exam pattern analysis (MANDATORY when exam material exists; runs before chapter planning in PASS mode)
+11. **`references/11-exam-prep.md`** — exam-prep page + Exam Focus boxes (when exam material exists)
+12. `references/13-orchestration.md` — multi-agent role orchestration (optional, recommended)
+13. `references/07-checklist.md` — final QA
 
 Then study `assets/chapter.html` to internalize the structure.
 
@@ -92,15 +115,17 @@ Then study `assets/chapter.html` to internalize the structure.
 
 ## 2. Output structure (in the PARENT directory)
 
-Do **not** generate inside `webnotes-skill/`. The skill folder is reference-only. Output goes to the parent directory:
+Do **not** generate inside `webnotes-builder/` (the skill/extension folder). It is reference-only. Output goes to the course workspace:
 
 ```
 course-folder/
 ├── slides/                    ← original PDFs (untouched)
 ├── exams/ · assignments/      ← exam material, if present (untouched — feeds exam_prep)
-├── webnotes-skill/            ← this skill (kept for re-runs, do not modify)
+├── webnotes-builder/          ← this skill/extension (kept for re-runs, do not modify;
+│                                 absent when installed globally as a plugin/extension)
 ├── _build/                    ← agent's working state ONLY (created by you)
 │   ├── STATE.md               ← progress tracker (see §3)
+│   ├── exam_patterns.md       ← past-exam mining output (see references/12-exam-mining.md)
 │   ├── topic1_outline.md      ← extracted content per chapter
 │   ├── topic1_fidelity.md     ← per-chapter coverage checklist
 │   ├── examprep_outline.md    ← exam material extraction (if exam material exists)
@@ -138,11 +163,15 @@ Format:
 ## Course
 - Title: Algorithms & Data Structures
 - Lang: el
+- Goal: PASS | MASTER
+- Attribution: dated | generic   (exam-reference style — see references/12-exam-mining.md §5)
 - Style: standard-depth, mixed Greek + English technical terms
 - Source dir: ./slides/
+- Syllabus scope: all | in-scope: [3,4,5,6,7,8,10] hidden: [9,11,12,13]
 
 ## Phases
-- [x] Phase 1 — Discovery (mode: CREATE | ENHANCE; exam material: yes/no)
+- [x] Phase 1 — Discovery (mode: CREATE | ENHANCE; goal: PASS | MASTER; exam material: yes/no)
+- [x] Phase 1.5 — Exam mining (_build/exam_patterns.md) — mandatory if exam material exists
 - [x] Phase 2 — Plan approved by user
 - [x] Phase 3 — Scaffolding (shared assets, index skeleton)
 - [ ] Phase 4 — Chapters
@@ -188,6 +217,11 @@ For each chapter:
 4b. HTML         — Generate the chapter HTML from the outline. Use
                    assets/chapter.html as starting structure.
                    Reference references/04-html-components.md constantly.
+                   EVERY chapter page opens with an «Η Ουσία σε 60″» essence
+                   section (intuition-first TL;DR: what it does, the mental
+                   model, works-well-when vs fails-when, "για τις εξετάσεις
+                   θυμήσου" tip) — see 04-html-components.md. Mandatory in
+                   PASS mode, strongly recommended in MASTER mode.
 
 4c. QUIZ         — Add quiz questions to data/questions.js. One sub-entry
                    per section. 1-3 questions per section.
@@ -235,17 +269,26 @@ When the user invokes you for the first time, before doing anything else:
 - [ ] Detect the subject domain (CS / math / logic / networking / ...)
 - [ ] Detect exam material: `exams/`, `past-papers/`, `assignments/`, exercise files,
       photos of exam papers → plan an Exam Prep phase (`references/11-exam-prep.md`)
+- [ ] Detect flashcard data or need for theory flashcards (if theory questions exist)
 - [ ] Detect an existing webnotes site (`topic*.html`, `index.html`, `styles/`) →
       switch to ENHANCE mode: audit gaps vs this skill's standard, propose upgrade plan
+- [ ] Detect an official syllabus announcement («ανακοίνωση ύλης», "exam covers...") —
+      it defines the in-scope chapter set for PASS mode
 - [ ] Propose a chapter plan: file → chapter title → slug → estimated section count
       (or, in ENHANCE mode, a per-page gap list ordered by impact)
-- [ ] Ask the user 4 questions (use `AskUserQuestion` if available):
-  1. Confirm/edit the plan
-  2. Preferred language for explanations
-  3. Depth preference: terse / standard / encyclopedic
-  4. Any specific topics to emphasize or de-emphasize
+- [ ] Ask the user (use `AskUserQuestion` if available):
+  1. **Goal mode** — «Θέλεις (α) να ΠΕΡΑΣΕΙΣ το μάθημα γρήγορα (εστίαση στα μοτίβα
+     των εξετάσεων, μόνο ό,τι χρειάζεται για τη βάση) ή (β) να ΚΑΤΑΝΟΗΣΕΙΣ όλη την
+     ύλη (πλήρης κάλυψη όλων των σημειώσεων);» → PASS | MASTER
+  2. Confirm/edit the plan (in PASS mode: after exam mining, including the hide-list)
+  3. Preferred language for explanations + depth (terse / standard / encyclopedic —
+     PASS mode defaults to intuition-first standard)
+  4. If exam material exists: attribution style — dated badges («πέφτει σίγουρα»,
+     «2023·Σεπτ») or generic exercises; default dated (see 12-exam-mining.md §5)
 
-Wait for answers before scaffolding.
+Wait for answers before scaffolding. If exam material exists, run exam mining
+(`references/12-exam-mining.md`) BEFORE finalizing the chapter plan — in PASS mode
+the mining output IS the plan's backbone.
 
 ---
 
@@ -254,13 +297,16 @@ Wait for answers before scaffolding.
 - [ ] Create `_build/STATE.md` (use the template in §3)
 - [ ] Copy ALL FOUR stylesheets: `assets/styles/{base,layout,components,quiz}.css` → `../styles/`
 - [ ] Copy `assets/js/nav.js` → `../js/nav.js` (edit `topics` array: one entry per chapter,
-      pick a fitting `SVG_ICONS.*` per subject; keep `examprep` + `quiz` entries last)
+      pick a fitting `SVG_ICONS.*` per subject; keep `examprep` + `quiz` + `flashcards` entries last)
 - [ ] Copy `assets/js/quiz-loader.js` → `../js/quiz-loader.js`
 - [ ] Copy `assets/js/interactive_quiz.js` → `../js/interactive_quiz.js`
+- [ ] Copy `assets/js/flashcards.js` → `../js/flashcards.js`
 - [ ] Copy `assets/data/questions.js` → `../data/questions.js` (empty stub)
+- [ ] Copy `assets/data/flashcards.js` → `../data/flashcards.js` (empty stub)
 - [ ] Create `../index.html` from `assets/index.html`, with one card per planned chapter (cards link to chapter files that don't yet exist — that's OK)
 - [ ] Create `../interactive_quiz.html` from `assets/interactive-quiz.html`
-- [ ] Verify: `ls ../index.html ../styles/ ../js/ ../data/`
+- [ ] Create `../flashcards.html` from `assets/flashcards.html`
+- [ ] Verify: `ls ../index.html ../flashcards.html ../styles/ ../js/ ../data/`
 - [ ] Update STATE.md: mark Phase 3 done
 - [ ] Tell the user scaffolding is done; ask which chapter to start with
 
@@ -289,19 +335,19 @@ Never assume you can re-derive state from looking at file modification times —
 
 ---
 
-## 10. Multi-agent coordination (optional)
+## 10. Multi-agent coordination (optional, recommended)
 
-For the most thorough output, consider running TWO agents per chapter:
+The build maps onto distinct agent roles — Orchestrator, Exam Miner, Outliner, Chapter
+Writer, Reviewer, QA Runner. Full role definitions, platform mapping (Claude Code
+subagents in `agents/`, Gemini sequential sessions, chat-per-role elsewhere), and
+parallelism/file-ownership rules are in **`references/13-orchestration.md`**.
 
-1. **Builder agent** — does 4a–4c (outline, HTML, quiz)
-2. **Reviewer agent** — does 4d (re-reads source, enhances HTML)
-
-The reviewer SHOULD be a fresh context with no memory of the builder's reasoning. It only sees: source PDF + generated HTML + the fidelity checklist. It then identifies omissions objectively.
-
-If you're a single agent doing both roles, **deliberately clear your reasoning between 4c and 4d** — re-open the source PDF from scratch, don't trust your memory of what's already in the HTML.
-
-See `references/10-reviewer-pass.md` for the reviewer protocol.
+The non-negotiable core: the **Reviewer must be a fresh context** with no memory of the
+builder's reasoning. It only sees: source PDF + generated HTML + the fidelity checklist.
+If you're a single agent doing both roles, deliberately clear your reasoning between 4c
+and 4d — re-open the source PDF from scratch, don't trust your memory of what's already
+in the HTML. See `references/10-reviewer-pass.md` for the reviewer protocol.
 
 ---
 
-Now read `references/01-workflow.md` for the full process, or `references/09-chunked-execution.md` if you're picking up mid-build.
+Now read `references/01-workflow.md` for the full process, or `references/09-chunked-execution.md` if you're picking up mid-build. If past exams exist, `references/12-exam-mining.md` comes before any chapter planning.

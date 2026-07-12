@@ -1289,3 +1289,112 @@
     font-size: 0.9rem;
     min-width: 20px;
 }
+
+/* ===== Theory Flashcards — flip cards (vertical) ===== */
+.fc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+    margin: 20px 0;
+}
+.flip-card {
+    background: transparent;
+    height: 340px;
+    perspective: 1400px;
+    cursor: pointer;
+    outline: none;
+}
+.flip-card:focus-visible .flip-inner { box-shadow: 0 0 0 2px var(--purple); border-radius: 14px; }
+.flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4,0.2,0.2,1);
+    transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+    position: absolute;
+    inset: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.flip-front {
+    background: linear-gradient(160deg, var(--surf) 0%, var(--surf2) 100%);
+    border-left: 4px solid var(--purple);
+}
+.flip-back {
+    background: linear-gradient(160deg, #060a10 0%, var(--surf) 100%);
+    border-left: 4px solid var(--green);
+    transform: rotateY(180deg);
+}
+.fc-tag {
+    align-self: flex-start;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--purple);
+    background: rgba(188,140,255,0.10); border: 1px solid rgba(188,140,255,0.25);
+    border-radius: 5px; padding: 3px 8px;
+}
+.fc-q { font-weight: 700; font-size: 1rem; color: var(--txt); line-height: 1.45; }
+.fc-a { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+.fc-a strong { color: var(--txt); }
+.fc-a code, .fc-hint code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
+.fc-hint {
+    background: var(--ydim); border: 1px solid rgba(227,179,65,0.25); border-radius: 8px;
+    padding: 9px 11px; font-size: 0.8rem; color: var(--txt); line-height: 1.55;
+}
+.fc-hint-lbl { color: var(--yellow); font-weight: 700; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 3px; }
+.fc-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.fc-hint-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700;
+    padding: 5px 10px; border-radius: 7px; cursor: pointer; transition: all 0.15s;
+}
+.fc-hint-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+.fc-hint-btn.active { background: var(--yellow); border-color: var(--yellow); color: #2d2208; }
+.fc-cue { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; color: var(--dim); }
+
+/* ===== Flashcards Test (flashcards.html) ===== */
+.fctest-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 60px; }
+.fctest-card { background: var(--surf); border: 1px solid var(--border); border-radius: 16px; padding: 26px; }
+.fc-topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 10px; margin: 18px 0; }
+.fc-topic-btn {
+    background: var(--surf2); border: 1.5px solid var(--border); color: var(--txt);
+    border-radius: 10px; padding: 12px 14px; cursor: pointer; text-align: left;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; transition: all 0.15s;
+}
+.fc-topic-btn:hover { border-color: var(--purple); }
+.fc-topic-btn.sel { border-color: var(--purple); background: rgba(188,140,255,0.12); }
+.fc-topic-btn .fct-count { display:block; color: var(--dim); font-size: 0.68rem; margin-top: 3px; }
+.fc-primary-btn {
+    background: var(--purple); border: none; color: #1d1040; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; padding: 12px 22px;
+    border-radius: 10px; cursor: pointer; transition: all 0.15s;
+}
+.fc-primary-btn:hover { filter: brightness(1.1); }
+.fc-primary-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.fctest-stage-card { height: 420px; }
+.fctest-progress { display:flex; justify-content:space-between; align-items:center; font-family:'JetBrains Mono',monospace; font-size:0.78rem; color: var(--muted); margin-bottom: 10px; }
+.fctest-bar { height: 6px; background: var(--surf2); border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
+.fctest-bar > div { height: 100%; background: var(--purple); transition: width 0.3s; }
+.fctest-controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
+.fc-ctrl {
+    background: transparent; border: 1.5px solid var(--border); color: var(--txt);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700;
+    padding: 9px 16px; border-radius: 9px; cursor: pointer; transition: all 0.15s;
+}
+.fc-ctrl:hover { border-color: var(--purple); }
+.fc-ctrl.know { border-color: var(--green); color: var(--green); }
+.fc-ctrl.know:hover { background: var(--gdim); }
+.fc-ctrl.dunno { border-color: var(--orange); color: var(--orange); }
+.fc-ctrl.dunno:hover { background: var(--odim); }
+.fc-ctrl:disabled { opacity: 0.35; cursor: not-allowed; }
+.fc-score-num { font-family:'Syne',sans-serif; font-size: 3rem; font-weight: 800; color: var(--green); }

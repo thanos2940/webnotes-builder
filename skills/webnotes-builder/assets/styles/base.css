@@ -83,29 +83,33 @@ h4 {
     background: var(--dim);
 }
 
-/* Navigation Hub Overlay */
+/* Navigation Sidebar (Desktop) */
 #site-nav {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
+    bottom: 0;
+    width: 280px;
     z-index: 1000;
     background: rgba(var(--bg-rgb, 8, 8, 15), 0.85);
     backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    height: var(--nav-height);
+    border-right: 1px solid var(--border);
     display: flex;
-    align-items: center;
-    padding: 0 40px;
+    flex-direction: column;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+body {
+    padding-left: 280px;
 }
 
 .nav-wrapper {
-    max-width: 93.75rem;
-    margin: 0 auto;
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
 }
 
 .nav-logo {
@@ -117,50 +121,52 @@ h4 {
     display: flex;
     align-items: center;
     gap: 0.625rem;
-    flex-shrink: 0;
-    width: 13.5rem; /* Equal width to actions for perfect centering of links */
-    justify-content: flex-start;
-    white-space: nowrap; /* Prevent logo wrapping */
+    width: 100%;
 }
 
 .nav-links {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0 1rem;
-    overflow-x: auto;
-    white-space: nowrap;
-    flex: 1;
-    min-width: 0;
-    justify-content: safe center;
-    scrollbar-width: none; /* Hide scrollbar Firefox */
-}
-
-.nav-links::-webkit-scrollbar {
-    display: none; /* Hide scrollbar Chrome/Safari */
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 6px;
 }
 
 .nav-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    width: 13.5rem; /* Equal width to logo for perfect centering of links */
-    justify-content: flex-end;
-    flex-shrink: 0; /* Prevent shrinking to ensure perfect column symmetry */
+    justify-content: flex-start;
+    gap: 15px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.nav-item-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .nav-link {
     color: var(--muted);
     text-decoration: none;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8125rem;
-    padding: 0.4rem 0.65rem;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.8rem;
     border-radius: 8px;
     transition: var(--transition);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+    line-height: 1;
+}
+
+.nav-link > span:first-child {
     display: flex;
     align-items: center;
-    gap: 6px;
-    line-height: 1;
+    justify-content: center;
 }
 
 .nav-link:hover {
@@ -175,43 +181,61 @@ h4 {
     box-shadow: 0 0 15px rgba(var(--green-rgb), 0.1);
 }
 
-/* Responsive Navigation */
-@media (max-width: 1024px) {
-    :root {
-        --nav-height: 7.25rem;
-    }
-    #site-nav {
-        height: auto;
-        min-height: var(--nav-height);
-        padding: 0.75rem 20px;
-    }
-    .nav-wrapper {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    .nav-logo {
-        width: auto;
-    }
-    .nav-actions {
-        width: auto;
-    }
-    .nav-links {
-        width: 100%;
-        flex: none;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.4rem;
-        padding: 0.2rem 0;
-    }
-    .nav-link {
-        font-size: 0.75rem;
-        padding: 0.3rem 0.5rem;
-    }
+.nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-@media (max-width: 600px) {
-    :root {
-        --nav-height: 9.5rem;
+.nav-toggle svg {
+    transition: transform 0.3s ease;
+}
+
+.nav-item-container.expanded .nav-toggle svg {
+    transform: rotate(180deg);
+}
+
+.nav-submenu {
+    display: none;
+    flex-direction: column;
+    margin-left: 20px;
+    border-left: 1px solid var(--border);
+    padding-left: 10px;
+    margin-top: 4px;
+    gap: 4px;
+}
+
+.nav-item-container.expanded .nav-submenu {
+    display: flex;
+}
+
+.nav-sublink {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.nav-sublink:hover, .nav-sublink.active {
+    color: var(--txt);
+    background: var(--surf2);
+}
+
+.nav-sublink.active {
+    color: var(--green);
+}
+
+/* Responsive Navigation adjustments */
+@media (max-width: 1024px) {
+    #site-nav {
+        width: 240px;
+        padding: 20px 16px;
+    }
+    body {
+        padding-left: 240px;
     }
 }
 
@@ -222,7 +246,8 @@ h4 {
 .sh-icon svg,
 .tip-icon svg,
 .lbl svg,
-.card-title svg {
+.card-title svg,
+.topic-card h3 svg {
     width: 1.2em;
     height: 1.2em;
     stroke: currentColor;
@@ -235,11 +260,16 @@ h4 {
     transition: transform 0.2s ease;
 }
 
-.nav-link span,
-.nav-logo span {
+.nav-link span:not(.nav-text),
+.nav-logo span,
+.card-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+.nav-text {
+    text-align: left;
 }
 
 /* Specific size adjustments */
@@ -259,7 +289,8 @@ h4 {
 }
 
 .lbl svg,
-.card-title svg {
+.card-title svg,
+.card-icon svg {
     margin-right: 6px;
 }
 
@@ -337,7 +368,7 @@ h4 {
     gap: 0.75rem;
     flex-wrap: wrap;
     position: sticky;
-    top: var(--nav-height);
+    top: 0; /* Updated for desktop sidebar layout */
     z-index: 99;
     justify-content: center;
 }
@@ -473,6 +504,13 @@ html[data-theme="light"] section:hover {
     overflow-x: auto;
     text-align: left;
     /* Strict left alignment */
+}
+
+.cb code {
+    background: transparent !important;
+    color: inherit !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
 }
 
 /* Boxes */
@@ -1153,16 +1191,24 @@ textarea {
 
 /* Light Mode Variables Overrides with high specificity */
 html[data-theme="light"] {
-    --hero-bg: linear-gradient(150deg, #f8fafc 0%, #e2e8f0 100%);
+    --hero-bg: linear-gradient(150deg, #f8fafc 0%, #f1f5f9 100%);
     --bg: #f8fafc;
     --bg-rgb: 248, 250, 252;
     --surf: #ffffff;
     --surf2: #f1f5f9;
     --border: #e2e8f0;
     --txt: #0f172a;
-    --muted: #475569;
-    --dim: #64748b;
+    --muted: #334155;
+    --dim: #4f5e71;
+}
 
+/* Improve contrast for muted and dim text in dark mode */
+html:not([data-theme="light"]) {
+    --muted: #abb4c2 !important;
+    --dim: #8892b0 !important;
+}
+
+html[data-theme="light"] {
     --blue: #0284c7;
     --blue-rgb: 2, 132, 199;
     --bdim: #e0f2fe;
@@ -1408,16 +1454,27 @@ html[data-theme="light"] .tree-text.root-t {
         --nav-height: 3.5rem;
     }
 
+    body {
+        padding-left: 0;
+    }
+
     #site-nav {
+        bottom: auto;
+        width: 100%;
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
         padding: 0 1.25rem;
         height: var(--nav-height);
+        overflow-y: visible;
     }
 
     .nav-wrapper {
-        display: flex;
+        flex-direction: row;
         justify-content: space-between;
         align-items: center;
         flex-wrap: nowrap;
+        gap: 0;
     }
 
     .nav-logo,
@@ -1461,6 +1518,14 @@ html[data-theme="light"] .tree-text.root-t {
         display: inline-flex;
     }
 
+    .nav-actions {
+        width: auto;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        justify-content: flex-end;
+    }
+
     .theme-toggle {
         margin-left: 0;
         margin-top: 0;
@@ -1468,6 +1533,7 @@ html[data-theme="light"] .tree-text.root-t {
     }
 
     .toc {
+        top: var(--nav-height); /* Keep below mobile top bar */
         padding: 0.75rem 1.25rem;
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -1523,5 +1589,215 @@ html[data-theme='light'] .hero p {
     color: var(--txt);
     text-shadow: none;
 }
+
+/* Light Mode Component & Simulator Overrides */
+html[data-theme="light"] .struct-box,
+html[data-theme="light"] .thread-diagram,
+html[data-theme="light"] .msim-lane,
+html[data-theme="light"] .ssim-pill,
+html[data-theme="light"] .mem-cell,
+html[data-theme="light"] .pyr-info,
+html[data-theme="light"] .mm-box,
+html[data-theme="light"] .gantt-chart,
+html[data-theme="light"] .trace-table,
+html[data-theme="light"] div[style*="background:#060a10"],
+html[data-theme="light"] div[style*="background: #060a10"],
+html[data-theme="light"] div[style*="background:#010409"],
+html[data-theme="light"] div[style*="background: #010409"] {
+    background: var(--surf2) !important;
+    border-color: var(--border) !important;
+    color: var(--txt) !important;
+}
+
+html[data-theme="light"] .trace-table th {
+    background: var(--surf) !important;
+    color: var(--orange) !important;
+}
+
+html[data-theme="light"] .trace-table tr:nth-child(even) {
+    background: var(--surf) !important;
+}
+
+/* Fix nested text colors inside overriden blocks */
+html[data-theme="light"] .struct-box *,
+html[data-theme="light"] .thread-diagram *,
+html[data-theme="light"] .msim-lane *,
+html[data-theme="light"] .ssim-pill *,
+html[data-theme="light"] .mem-cell *,
+html[data-theme="light"] .pyr-info *,
+html[data-theme="light"] .mm-box * {
+    color: var(--txt);
+}
+
+/* Fix simulators message output boxes background and text */
+html[data-theme="light"] #psim-msg,
+html[data-theme="light"] #msim-msg,
+html[data-theme="light"] #tsim-out,
+html[data-theme="light"] #int-desc,
+html[data-theme="light"] #io-view,
+html[data-theme="light"] #era-desc {
+    background: var(--surf2) !important;
+    color: var(--txt) !important;
+    border-color: var(--border) !important;
+}
+
+/* Interactive Simulators Buttons/Inputs Override */
+html[data-theme="light"] #tsim-in {
+    background: var(--surf) !important;
+    color: var(--txt) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-theme="light"] .tsim button {
+    background: var(--bdim) !important;
+    color: var(--blue) !important;
+    border-color: var(--blue) !important;
+}
+
+html[data-theme="light"] .tsim button:hover {
+    filter: brightness(0.95) !important;
+}
+
+/* Memory placement simulator buttons */
+html[data-theme="light"] .psim button {
+    background: var(--cdim) !important;
+    color: var(--cyan) !important;
+    border-color: var(--cyan) !important;
+}
+
+html[data-theme="light"] .psim button.sel,
+html[data-theme="light"] #psim .psim-alg.sel {
+    background: var(--cyan) !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .psim button:hover {
+    filter: brightness(0.95) !important;
+}
+
+/* Memory Layout Components */
+html[data-theme="light"] .memory-block.hole,
+html[data-theme="light"] .legend-box[style*="background:#30363d"],
+html[data-theme="light"] div[style*="background:#30363d"] {
+    background: var(--border) !important;
+    color: var(--muted) !important;
+}
+
+html[data-theme="light"] .psim-used {
+    background: repeating-linear-gradient(45deg, var(--surf2), var(--surf2) 6px, var(--border) 6px, var(--border) 12px) !important;
+    color: var(--muted) !important;
+}
+
+/* Gantt Chart Overrides */
+html[data-theme="light"] .gantt-block.idle {
+    background: var(--surf2) !important;
+    color: var(--dim) !important;
+}
+
+/* Code block red-tint error override */
+html[data-theme="light"] .cb[style*="background:#1a0f0f"],
+html[data-theme="light"] div[style*="background:#1a0f0f"] {
+    background: #fffafa !important;
+    border-color: var(--red) !important;
+}
+html[data-theme="light"] div[style*="background:#1a0f0f"] code {
+    background: transparent !important;
+}
+
+/* Homepage (Hub) Light Mode Enhancements */
+html[data-theme="light"] .hub-hero {
+    background: radial-gradient(circle at 50% 0%, rgba(2, 132, 199, 0.1) 0%, rgba(124, 58, 237, 0.04) 50%, transparent 100%) !important;
+}
+
+html[data-theme="light"] .hub-hero h1 {
+    background: linear-gradient(135deg, #0284c7 0%, #7c3aed 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+html[data-theme="light"] .search-container input {
+    background: #ffffff !important;
+    border: 1.5px solid rgba(2, 132, 199, 0.25) !important;
+    box-shadow: 0 4px 20px rgba(2, 132, 199, 0.05) !important;
+}
+
+html[data-theme="light"] .search-container input:focus {
+    border-color: var(--blue) !important;
+    box-shadow: 0 4px 25px rgba(2, 132, 199, 0.15) !important;
+}
+
+/* Homepage Cards Light Mode Styling */
+html[data-theme="light"] .topic-card {
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+html[data-theme="light"] .topic-card:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: 0 15px 30px rgba(2, 132, 199, 0.1) !important;
+    background: #ffffff !important;
+}
+
+/* Add custom top-colored indicators to the cards */
+html[data-theme="light"] .topic-card:nth-child(1) { border-top: 4px solid var(--green) !important; }
+html[data-theme="light"] .topic-card:nth-child(2) { border-top: 4px solid var(--blue) !important; }
+html[data-theme="light"] .topic-card:nth-child(3) { border-top: 4px solid var(--purple) !important; }
+html[data-theme="light"] .topic-card:nth-child(4) { border-top: 4px solid var(--cyan) !important; }
+html[data-theme="light"] .topic-card:nth-child(5) { border-top: 4px solid var(--orange) !important; }
+html[data-theme="light"] .topic-card:nth-child(6) { border-top: 4px solid var(--green) !important; }
+html[data-theme="light"] .topic-card:nth-child(7) { border-top: 4px solid var(--orange) !important; }
+html[data-theme="light"] .topic-card:nth-child(8) { border-top: 4px solid var(--purple) !important; }
+
+/* Apply matching colors to the topic numbers */
+html[data-theme="light"] .topic-card:nth-child(1) .topic-num { color: var(--green) !important; }
+html[data-theme="light"] .topic-card:nth-child(2) .topic-num { color: var(--blue) !important; }
+html[data-theme="light"] .topic-card:nth-child(3) .topic-num { color: var(--purple) !important; }
+html[data-theme="light"] .topic-card:nth-child(4) .topic-num { color: var(--cyan) !important; }
+html[data-theme="light"] .topic-card:nth-child(5) .topic-num { color: var(--orange) !important; }
+html[data-theme="light"] .topic-card:nth-child(6) .topic-num { color: var(--green) !important; }
+
+/* Slightly richer shadow for section hover in chapters in light mode */
+html[data-theme="light"] section:hover {
+    box-shadow: 0 10px 35px rgba(2, 132, 199, 0.06) !important;
+    border-color: rgba(2, 132, 199, 0.2) !important;
+}
+
+/* Richer colors on inline chips */
+html[data-theme="light"] .chip {
+    background: var(--surf2) !important;
+    border-color: var(--border) !important;
+    color: var(--txt) !important;
+}
+
+/* Standardize readable text sizes across the guide */
+.wrap p,
+.wrap li,
+.wrap ol,
+.wrap ul,
+.tip-text,
+.exam-stmt p,
+.card p,
+.card li,
+.ibox,
+.wbox,
+.gbox,
+.rbox,
+[id$="-msg"] {
+    font-size: 1.09rem !important;
+}
+
+/* Theory Flashcards Light Mode Overrides */
+html[data-theme="light"] .flip-back {
+    background: linear-gradient(160deg, var(--surf) 0%, var(--surf2) 100%) !important;
+}
+
+html[data-theme="light"] .fc-a code,
+html[data-theme="light"] .fc-hint code {
+    background: rgba(15, 23, 42, 0.08) !important;
+    color: var(--txt) !important;
+}
+
 
 
