@@ -300,6 +300,48 @@ Ensure that `js/flashcards.js` and `data/flashcards.js` are loaded on the page.
 
 ---
 
+## 8c. Cram Sheet (`cram_sheet.html`) — printable one-pager (PASS mode)
+
+The last thing a student reads before walking into the exam — **one printed page** (two
+at most). Build it in PASS mode, or whenever the user asks for a printable summary.
+
+**Content (in this order, everything sourced from `_build/exam_patterns.md` and the
+chapter essence sections):**
+
+1. **The core-facts table** (complexity/operator/formula table) — condensed to one
+   compact `vtbl`, memorization aid column included.
+2. **«Θυμήσου» per chapter** — the numbered take-aways from each in-scope chapter's
+   «Η Ουσία σε 60″» exam tip, one line each, grouped by chapter.
+3. **Key formulas** — only the graded ones, each with a 3-5 word "τι λέει" gloss.
+4. **Tier-1 checklist** — the CORE families as checkboxes («μπορώ να γράψω την
+   περιγραφή του K-means από μνήμης;»), so the student can self-verify readiness.
+
+**Format rules:**
+
+- Standard page skeleton (nav/hero minimal), but the whole content area is optimized
+  for `@media print`: white background, black text, no shadows/gradients, `.no-print`
+  on nav/hero/footer, `page-break-inside: avoid` on each block.
+
+```css
+@media print {
+  body { background: #fff; color: #000; font-size: 11px; }
+  .no-print, #site-nav, .hero, .footer, .theme-toggle { display: none !important; }
+  .vtbl, .card { border-color: #999; box-shadow: none; break-inside: avoid; }
+  a { color: #000; text-decoration: none; }
+}
+```
+
+- Density over beauty: this page intentionally violates the "spacious layout" rule —
+  it's a reference card, not reading material.
+- No quizzes, no interactivity, no MathJax if avoidable (plain text/Unicode formulas
+  print more reliably); if MathJax is needed, keep display math out of tables.
+- Attribution rules apply as everywhere (badges only in `dated` mode).
+
+**Wiring:** nav entry after Exam Prep (`icon: SVG_ICONS.book`), plus a small hub card
+(«🖨️ Cram Sheet — τύπωσέ το για την τελευταία επανάληψη») next to the Flashcards card.
+
+---
+
 ## 9. Exam Focus boxes in the chapter pages (the "hybrid")
 
 The exam page alone is not enough — students study chapter-by-chapter. Add a compact
@@ -385,6 +427,7 @@ per family.
 - [ ] Trace drills toggle correctly (unique ids)
 - [ ] `examprep` entries in `data/questions.js`; no console warnings
 - [ ] 🎯 Exam Focus boxes placed in mapped chapter sections, links resolve
-- [ ] Nav + hub card wired (including Cram Sheet and Flashcards Test cards where relevant)
+- [ ] Nav + hub card wired (including Flashcards Test, and in PASS mode the
+      `cram_sheet.html` printable one-pager per §8c with its card + print CSS)
 - [ ] `_build/examprep_fidelity.md` all ticked
 - [ ] STATE.md updated (Exam Prep phase ✅)

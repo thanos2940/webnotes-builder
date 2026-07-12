@@ -1,42 +1,9 @@
-description = "Outline a chapter — read the source PDF and build the content + fidelity checklist."
+description = "Outline chapter N - read the source, build outline + fidelity checklist"
 
 prompt = """
-Build the outline for a specific chapter. The user will tell you which chapter number.
+Execute the canonical workflow file workflows/outline.md from the webnotes-builder
+extension root (find it via /extensions list - typically
+~/.gemini/extensions/webnotes-builder/workflows/outline.md).
 
-Steps:
-
-1. Read `_build/STATE.md` to find the source PDF for the requested chapter (e.g. chapter 3 → slides/lecture3.pdf).
-
-2. Read skills/webnotes-builder/SKILL.md §4.A (outline session) and skills/webnotes-builder/references/02-research.md.
-
-3. Read skills/webnotes-builder/references/08-fidelity.md to understand fidelity checklist format.
-
-4. Open the source PDF and read it PAGE BY PAGE (not skim). For an 80-page deck, this will take multiple tool calls.
-
-5. Extract EVERY substantive item:
-   - Definitions (term + statement)
-   - Code listings (transcribe exactly)
-   - Pseudocode
-   - Diagrams (describe so you can recreate as ASCII later)
-   - Worked examples
-   - Warnings / prohibitions / "be careful" boxes
-   - Tables / comparisons
-   - Named operators / functions / keywords / properties (list ALL — don't decide some are unimportant)
-   - Bibliographic references
-
-6. Write two files in `_build/`:
-   - `_build/topic<N>_outline.md` — structured content extraction grouped by planned section
-   - `_build/topic<N>_fidelity.md` — checklist (`- [ ] [page P] Item`) — one entry per item from step 5
-
-7. Update `_build/STATE.md`:
-   - Mark Outline ✅ for this chapter
-   - Update "Last completed action" timestamp
-   - Set "Next action" to: "Write HTML for chapter <N> (run /webnotes-html <N>)"
-
-8. Tell the user:
-   - How many items are in the fidelity checklist
-   - How many pages of source were read
-   - What to ask next: `/webnotes-html <N>`
-
-DO NOT also write the HTML in this session. Outline only.
+Read it fully and follow it exactly, substituting <N> = {{args}}.
 """

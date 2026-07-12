@@ -47,14 +47,30 @@ The main conversation acts as Orchestrator:
 Or, without the plugin, spawn general-purpose subagents with the role prompt from the
 matching `agents/*.md` file pasted into the task description.
 
-### Gemini CLI (no subagents)
+### Antigravity CLI / Antigravity 2.0 (subagents available)
 
-Roles = sessions. The `/webnotes-*` commands already are role entry points:
-`/webnotes-mine` → Miner, `/webnotes-outline N` → Outliner, `/webnotes-html N` +
-`/webnotes-quiz N` → Writer, `/webnotes-review N` → Reviewer. Fresh context is achieved
-by starting a new `gemini` session for the review.
+The plugin's `agents/` directory registers the same role agents. Delegate with the
+native subagent syntax so the role runs in an isolated context in parallel:
 
-### Antigravity / Cursor / Claude Desktop
+```
+> In a subagent: use webnotes-reviewer to review chapter 3
+  (source: slides/ch3.pdf, page: topic3_trees.html, checklist: _build/topic3_fidelity.md)
+```
+
+The `/agents` panel shows and manages running subagents. Phases without a dedicated
+agent are invoked in natural language («κάνε exam mining», «γράψε το HTML του κεφ. 3»)
+— the skill routes them. Subagent isolation satisfies the fresh-context rule for the
+Reviewer automatically.
+
+### Gemini CLI (legacy — no subagents)
+
+Sunset for most users on 2026-06-18; still available via Code Assist
+Standard/Enterprise. Roles = sessions. The `/webnotes-*` TOML commands are role entry
+points: `/webnotes-mine` → Miner, `/webnotes-outline N` → Outliner, `/webnotes-html N`
++ `/webnotes-quiz N` → Writer, `/webnotes-review N` → Reviewer. Fresh context is
+achieved by starting a new `gemini` session for the review.
+
+### Cursor / Claude Desktop / other chat surfaces
 
 One chat per role. Open a new chat for the Reviewer, paste the role prompt from
 `agents/webnotes-reviewer.md`, point it at the three inputs.

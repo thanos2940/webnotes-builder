@@ -1,48 +1,9 @@
-description = "Write the HTML page for a chapter from its outline + fidelity checklist."
+description = "Write the HTML page for chapter N from its outline"
 
 prompt = """
-Write the HTML page for a specific chapter. The user will tell you which chapter number.
+Execute the canonical workflow file workflows/html.md from the webnotes-builder
+extension root (find it via /extensions list - typically
+~/.gemini/extensions/webnotes-builder/workflows/html.md).
 
-Steps:
-
-1. Read `_build/STATE.md` to confirm:
-   - The chapter outline exists (`_build/topic<N>_outline.md`)
-   - The fidelity checklist exists (`_build/topic<N>_fidelity.md`)
-   - If either is missing, tell the user to run `/webnotes-outline <N>` first.
-
-2. Read these references:
-   - skills/webnotes-builder/SKILL.md
-   - skills/webnotes-builder/references/04-html-components.md (constant reference during writing)
-   - skills/webnotes-builder/references/03-design-system.md (color theme, typography)
-   - skills/webnotes-builder/references/06-interactivity.md (when to add ASCII diagrams)
-
-3. Read the starter template: skills/webnotes-builder/assets/chapter.html.
-
-4. Read the outline AND fidelity checklist for this chapter.
-
-5. Pick a chapter accent color (consult STATE.md to avoid duplicates).
-
-6. Write the HTML file in the workspace root: `topic<N>_<slug>.html`.
-
-7. As you write each section:
-   - Use components from references/04-html-components.md (cards, tips, code blocks with syntax classes, tables, diagrams)
-   - For EACH item in the fidelity checklist, find the right section to include it, write it in, and TICK the checkbox
-   - Add the section's `<div class="section-quiz" data-topic="topic<N>" data-section="<id>"></div>` placeholder at the end
-   - DO NOT skip checklist items — even minor ones get at least a one-liner mention
-
-8. After writing all sections:
-   - Verify every fidelity item is ticked in the checklist
-   - If any are unticked, find them in the source and add to the HTML
-   - Run a quick grep check (e.g. for Prolog: confirm every operator name appears in the HTML)
-
-9. Update `_build/STATE.md`:
-   - Mark HTML ✅ for this chapter
-   - Set "Next action" to: "Write quiz for chapter <N> (run /webnotes-quiz <N>)"
-
-10. Tell the user:
-    - Line count of the HTML produced
-    - Items covered: X/Y (should be Y/Y)
-    - What to ask next: `/webnotes-quiz <N>`
-
-DO NOT write the quiz data in this session. HTML only.
+Read it fully and follow it exactly, substituting <N> = {{args}}.
 """

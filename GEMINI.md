@@ -1,6 +1,15 @@
 # Webnotes Builder Extension
 
-This Gemini CLI extension converts course material (PDFs, markdown) into an interactive HTML study site, chapter-by-chapter, with per-section quizzes, content fidelity guarantees, and a chunked multi-session workflow.
+This context primer is read automatically by **Antigravity CLI** (which loads workspace
+`GEMINI.md`/`AGENTS.md`) and by **legacy Gemini CLI** (as the extension's
+`contextFileName`). The plugin converts course material (PDFs, markdown) into an
+interactive HTML study site, chapter-by-chapter, with per-section quizzes, content
+fidelity guarantees, and a chunked multi-session workflow.
+
+> Antigravity note: the `/webnotes-*` slash commands listed below are Claude Code /
+> legacy Gemini CLI entry points. In Antigravity, invoke the same phases in natural
+> language («ξεκίνα discovery», «κάνε exam mining», «reviewer pass στο κεφάλαιο 3») and
+> delegate roles with `In a subagent: use webnotes-reviewer …`.
 
 ## When the user invokes you
 

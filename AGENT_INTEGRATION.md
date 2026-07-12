@@ -1,11 +1,75 @@
 # Agent Integration Guide
 
-> Per-platform install/invocation. The same repo works natively as a **Claude Code
+> Per-platform install/invocation. The same repo works natively as an **Antigravity
+> plugin** (root `plugin.json` + `skills/` + subagents in `agents/`), a **Claude Code
 > plugin** (`.claude-plugin/plugin.json` + markdown commands + subagents in `agents/`),
-> a **Gemini CLI extension** (`gemini-extension.json` + TOML commands), and a
-> **standalone Agent Skill** (`skills/webnotes-builder/SKILL.md`) for Antigravity,
-> Cursor, Claude Desktop, OpenAI Assistants, and local LLMs (`PROMPT.md`).
+> a **legacy Gemini CLI extension** (`gemini-extension.json` + TOML commands — Gemini
+> CLI was sunset for most users on 2026-06-18 in favor of Antigravity CLI), and a
+> **standalone Agent Skill** (`skills/webnotes-builder/SKILL.md`) for Cursor, Claude
+> Desktop, OpenAI Assistants, and local LLMs (`PROMPT.md`).
 > Pick your section below.
+
+---
+
+## Antigravity CLI (`agy`) — native plugin
+
+Antigravity CLI is Google's successor to Gemini CLI (same agent harness as
+Antigravity 2.0). This repo is a valid Antigravity plugin out of the box: root
+`plugin.json`, the skill at `skills/webnotes-builder/SKILL.md` (auto-discovered,
+progressive disclosure), and the three role subagents in `agents/`.
+
+### Install
+
+```bash
+# from the published repo
+agy plugin install https://github.com/thanos2940/webnotes-builder.git
+
+# or from a local clone
+agy plugin install /path/to/webnotes-builder
+
+# validate during development
+agy plugin validate /path/to/webnotes-builder
+```
+
+Plugins land in `~/.gemini/antigravity-cli/plugins/webnotes-builder/`.
+
+### Use
+
+```bash
+cd ~/uni/algorithms-course/
+agy
+> /skills            # confirm "webnotes-builder" is listed
+> Build interactive course notes from the PDFs in this directory.
+```
+
+Phases are invoked in natural language — the skill's workflow routes them:
+«ξεκίνα discovery», «κάνε exam mining», «γράψε το HTML του κεφαλαίου 3»,
+«τρέξε reviewer pass στο κεφάλαιο 3». For the reviewer, use Antigravity's native
+subagent delegation so it runs in an isolated context:
+
+```
+> In a subagent: use webnotes-reviewer to review chapter 3
+  (source: slides/ch3.pdf, page: topic3_trees.html, checklist: _build/topic3_fidelity.md)
+```
+
+The `/agents` panel shows running subagents. Note: the `commands/*.toml` files in this
+repo are legacy Gemini CLI commands — `agy plugin import gemini` converts old Gemini
+extensions if you had one installed, but the native path above doesn't need them.
+
+### Antigravity IDE / workspace-scoped install (no plugin)
+
+Antigravity also reads workspace-level skills and context files directly:
+
+```bash
+# workspace-scoped skill
+mkdir -p .agents/skills/
+cp -r webnotes-builder/skills/webnotes-builder .agents/skills/
+
+# align agent behavior: put the entry-point instructions at the workspace root
+cp webnotes-builder/skills/webnotes-builder/AGENTS.md AGENTS.md
+```
+
+Antigravity reads `AGENTS.md` (and `GEMINI.md`) from the workspace root as context.
 
 ---
 
@@ -47,65 +111,25 @@ context automatically (see `skills/webnotes-builder/references/13-orchestration.
 
 ---
 
-## Gemini CLI (native extension)
+## Gemini CLI (legacy extension)
 
-This is what the project is designed for. Full feature set: bundled slash-commands, auto-loaded GEMINI.md, skill discovery.
-
-### Install — from a published repo
-
-```bash
-gemini extensions install https://github.com/<your-org>/webnotes-builder
-gemini extensions list
-```
-
-### Install — from a local clone
+> ⚠️ Gemini CLI stopped serving requests for Google AI Pro/Ultra and free users on
+> **2026-06-18** — use Antigravity CLI (above) instead. Gemini CLI remains supported
+> only via Gemini Code Assist Standard/Enterprise licenses. This repo stays a valid
+> Gemini CLI extension for those users (`gemini-extension.json` + `commands/*.toml`
+> + auto-loaded `GEMINI.md`).
 
 ```bash
-git clone <repo-url> webnotes-builder
-cd webnotes-builder
-gemini extensions link .
-```
+gemini extensions install https://github.com/thanos2940/webnotes-builder
+# or, for development:  cd webnotes-builder && gemini extensions link .
 
-`link` symlinks the folder — your edits to the extension are picked up immediately. Good for development.
-
-### Install — manual copy
-
-```bash
-mkdir -p ~/.gemini/extensions/
-cp -r webnotes-builder ~/.gemini/extensions/
-```
-
-### Verify
-
-```bash
-gemini
-> /extensions list
-# Should show: "webnotes-builder  v1.2.0  enabled"
-
-> /skills list
-# Should show: "webnotes-builder  Converts a folder of course material..."
-```
-
-### Use
-
-```bash
 cd ~/uni/algorithms-course/
 gemini
-
-# Either use a slash command:
-> /webnotes-start
-
-# Or describe your goal — Gemini matches the skill description automatically:
-> Build interactive course notes from the PDFs in this directory.
+> /webnotes-start        # or just describe your goal — skill matching is automatic
 ```
 
-### Disable / uninstall
-
-```bash
-gemini extensions disable webnotes-builder       # temporarily
-gemini extensions enable webnotes-builder
-gemini extensions uninstall webnotes-builder
-```
+If you're migrating an old Gemini CLI setup to Antigravity: `agy plugin import gemini`
+(commands become skills; custom themes don't migrate).
 
 ---
 
@@ -166,23 +190,25 @@ Open the course directory as a Project. First message:
 
 ---
 
-## Antigravity
+## Antigravity (IDE / editor surface)
 
-Place `AGENTS.md` (from `webnotes-builder/skills/webnotes-builder/AGENTS.md`) at your workspace root, OR keep the whole `webnotes-builder/` extension in the workspace and reference its SKILL.md.
+Prefer the native plugin install via Antigravity CLI (`agy plugin install ...`, first
+section of this guide) — the IDE and the CLI share the same agent harness, skills, and
+subagents. If you'd rather stay workspace-scoped without installing anything:
 
 ```bash
-# Option A — single agent pointer file at workspace root
-cp webnotes-builder/skills/webnotes-builder/AGENTS.md AGENTS.md
-# Edit AGENTS.md to use path: webnotes-builder/skills/webnotes-builder/SKILL.md
+# workspace-scoped skill (auto-discovered)
+mkdir -p .agents/skills/
+cp -r webnotes-builder/skills/webnotes-builder .agents/skills/
 
-# Option B — .agent/ folder
-mkdir -p .agent
-cat > .agent/webnotes-builder.md <<'EOF'
-# webnotes-builder
-When asked to build course notes, follow
-`webnotes-builder/skills/webnotes-builder/SKILL.md`.
-EOF
+# context file the agent reads at the workspace root
+cp webnotes-builder/skills/webnotes-builder/AGENTS.md AGENTS.md
 ```
+
+Then in the agent panel: *"Build interactive course notes from the PDFs in this
+directory"* — skill selection is automatic from the SKILL.md description. Delegate the
+reviewer with the native subagent syntax («In a subagent: …») per
+`references/13-orchestration.md`.
 
 ---
 
@@ -281,7 +307,8 @@ Typical time: 3-5 hours per chapter by hand vs 30-90 min per chapter with a good
 One install, many courses:
 
 ```
-~/.gemini/extensions/webnotes-builder/    ← installed once
+~/.gemini/antigravity-cli/plugins/webnotes-builder/   ← Antigravity CLI plugin (installed once)
+  (or ~/.claude plugin install · or ~/.gemini/extensions/ for legacy Gemini CLI)
 ~/uni/algorithms/                          ← course 1
   ├── slides/
   ├── _build/STATE.md
@@ -292,7 +319,7 @@ One install, many courses:
   └── (generated webnotes)
 ```
 
-Each course has its own `_build/STATE.md`. The extension picks up the right state per workspace.
+Each course has its own `_build/STATE.md`. The plugin picks up the right state per workspace.
 
 ---
 
@@ -301,8 +328,9 @@ Each course has its own `_build/STATE.md`. The extension picks up the right stat
 Full role definitions (Orchestrator / Exam Miner / Outliner / Chapter Writer /
 Reviewer / QA Runner), platform mapping, and parallelism rules:
 `skills/webnotes-builder/references/13-orchestration.md`. Role prompts ready to paste:
-`agents/*.md`. On Claude Code with the plugin installed, the roles are registered
-subagents. The minimal version — run TWO agents per chapter:
+`agents/*.md`. On Claude Code AND Antigravity with the plugin installed, the roles are
+registered subagents (Antigravity: «In a subagent: use webnotes-reviewer …»).
+The minimal version — run TWO agents per chapter:
 
 1. **Builder** does `/webnotes-outline`, `/webnotes-html`, `/webnotes-quiz`
 2. **Reviewer** (fresh context, ideally a different model) does `/webnotes-review`
@@ -316,8 +344,8 @@ Workflow:
 This catches omissions that confirmation bias would miss when one agent reviews its own work.
 
 Example combos:
-- Gemini builds + Claude reviews
-- Claude builds + Gemini reviews
+- Antigravity (Gemini) builds + Claude reviews
+- Claude builds + Antigravity (Gemini) reviews
 - Same model, different sessions (still benefits from fresh context)
 
 ---

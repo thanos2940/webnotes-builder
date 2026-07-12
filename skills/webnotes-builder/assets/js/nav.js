@@ -314,10 +314,43 @@ function replacePageEmojis() {
     });
 }
 
+// Hub progress tags — reads the quiz results saved by interactive_quiz.js
+// (localStorage key "webnotes-quiz::<dir>") and annotates each chapter card
+// on the index page with its accuracy so far. No-op off the hub / with no data.
+function renderHubProgress() {
+    const grid = document.querySelector('.topics-grid');
+    if (!grid) return;
+
+    let store = null;
+    try {
+        store = JSON.parse(localStorage.getItem(
+            'webnotes-quiz::' + location.pathname.replace(/[^/\\]*$/, '')));
+    } catch (e) { return; }
+    if (!store || !store.topics) return;
+
+    topics.forEach(topic => {
+        const stat = store.topics[topic.id];
+        if (!stat || !stat.t) return;
+        const card = grid.querySelector('a.topic-card[href="' + topic.path + '"]');
+        if (!card) return;
+        const tags = card.querySelector('.topic-tags');
+        if (!tags || tags.querySelector('.quiz-progress-tag')) return;
+
+        const pct = Math.round((stat.c / stat.t) * 100);
+        const tag = document.createElement('span');
+        tag.className = 'tag quiz-progress-tag';
+        tag.textContent = '📊 ' + pct + '% (' + stat.c + '/' + stat.t + ')';
+        tag.style.color = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
+        tag.style.borderColor = 'currentColor';
+        tags.appendChild(tag);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initNav();
     initTheme();
     initSearch();
     initScrollSpy();
     replacePageEmojis();
+    renderHubProgress();
 });

@@ -1,23 +1,9 @@
-description = "Show the current webnotes build state — chapters completed, pending, and what's next."
+description = "Report webnotes build state (read-only)"
 
 prompt = """
-Show the current webnotes build status.
+Execute the canonical workflow file workflows/status.md from the webnotes-builder
+extension root (find it via /extensions list - typically
+~/.gemini/extensions/webnotes-builder/workflows/status.md).
 
-Steps:
-
-1. Read `_build/STATE.md`. If it doesn't exist, report "No build in progress" and suggest `/webnotes-start`.
-
-2. Summarize for the user:
-   - Course title + metadata
-   - Phase completion (which of the 6 phases are done)
-   - Chapter table: for each chapter, show ✅/❌ for Outline / HTML / Quiz / Reviewer
-   - Overall progress percentage
-   - Open questions (if any)
-   - Known issues / fidelity gaps (if any)
-   - Last completed action timestamp
-   - Next action recommended
-
-3. Do NOT execute the next action. This command is read-only — it just reports status.
-
-4. End with concrete suggestions: "To continue, run `/webnotes-resume`" or "/webnotes-outline 3" etc.
+Read it fully and follow it exactly.
 """

@@ -1,0 +1,44 @@
+# Workflow: START — Discovery + goal mode + plan proposal
+
+> Canonical phase instructions. Paths are relative to the webnotes-builder plugin root;
+> if the repo sits inside your course workspace, prefix them with `webnotes-builder/`.
+
+You are starting a NEW webnotes build for this course directory.
+
+1. Read the skill specification fully:
+   - `skills/webnotes-builder/SKILL.md`
+   - `skills/webnotes-builder/references/01-workflow.md` (overall flow)
+   - `skills/webnotes-builder/references/08-fidelity.md` (content fidelity)
+   - `skills/webnotes-builder/references/09-chunked-execution.md` (multi-session workflow)
+
+2. Run the Discovery phase (Phase 1 in 01-workflow.md):
+   - Glob the workspace for `*.pdf`, `*.md`, `*.txt`, `*.docx`, `*.tex`, images
+   - Open the first 2-3 pages of each PDF to identify its subject
+   - Detect the language used in the sources
+   - Detect the subject domain (CS / math / algorithms / logic / networking / ...)
+   - Detect EXAM MATERIAL: `exams/`, `past-papers/`, `assignments/`, exercise files,
+     photos of exam papers — these feed exam mining (`references/12-exam-mining.md`)
+     and the exam_prep.html page (`references/11-exam-prep.md`)
+   - Detect an official SYLLABUS ANNOUNCEMENT («ανακοίνωση ύλης») — defines PASS-mode scope
+   - Detect an EXISTING webnotes site (`topic*.html`, `index.html`, `styles/`,
+     `data/questions.js`). If found this is an ENHANCE run: audit the existing pages
+     against the skill's standard and propose an upgrade plan, not a from-scratch plan.
+
+3. ASK THE USER (AskUserQuestion or equivalent, before any plan is final):
+   - **GOAL MODE**: (a) PASS — «θέλω απλά να περάσω» — exam-pattern-driven, only what's
+     needed for the pass line, exam_prep.html as the centerpiece; or (b) MASTER —
+     full coverage of all the material, beginner-friendly explanations of everything
+   - Preferred language for explanations (match source by default) + depth
+     (terse / standard / encyclopedic — PASS defaults to intuition-first standard)
+   - If exam material exists: attribution style — dated badges («πέφτει σίγουρα»,
+     «2023·Σεπτ») or generic exercises (12-exam-mining.md §5); default dated
+
+4. If exam material exists, the NEXT step is the MINE workflow (mandatory before the
+   plan in PASS mode). Otherwise propose the plan now:
+   - CREATE mode: one chapter per source file (or split very large files), suggested
+     slug, estimated section count, recommended color theme — plus an Exam Prep phase
+     if exam material was found
+   - ENHANCE mode: per-page gap list (missing essence sections, sections vs source,
+     quizzes, exam prep, goal-mode wiring, styling drift) ordered by impact
+
+5. Wait for the user's confirmation. Do NOT scaffold yet.

@@ -33,6 +33,55 @@
         return true;
     }
 
+    // ── Progress persistence (localStorage) ──
+    // Remembers per-question results across sessions, powers the "Επανάλαβε τα λάθη
+    // σου" review mode here and the per-chapter progress tags on the hub (nav.js).
+    const STORE_KEY = 'webnotes-quiz::' + location.pathname.replace(/[^/\\]*$/, '');
+
+    function loadStore() {
+        try {
+            const s = JSON.parse(localStorage.getItem(STORE_KEY));
+            if (s && typeof s === 'object' && s.answers) return s;
+        } catch (e) { /* corrupted or unavailable */ }
+        return { answers: {} };
+    }
+
+    function saveStore(s) {
+        const agg = {};
+        Object.entries(s.answers).forEach(([key, rec]) => {
+            const topicId = key.split('|')[0];
+            agg[topicId] = agg[topicId] || { c: 0, t: 0 };
+            agg[topicId].t++;
+            if (rec.c) agg[topicId].c++;
+        });
+        s.topics = agg; // aggregated per-topic stats, read by nav.js on the hub
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (e) { /* private mode / quota */ }
+    }
+
+    function qKey(topicId, sectionId, q) {
+        let h = 0;
+        const str = q.q || '';
+        for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+        return topicId + '|' + sectionId + '|' + h;
+    }
+
+    const store = loadStore();
+
+    function collectWrongQuestions() {
+        const wrong = [];
+        if (!db) return wrong;
+        Object.entries(db).forEach(([topicId, topicData]) => {
+            Object.entries(topicData).forEach(([sectionId, section]) => {
+                (section.questions || []).forEach(q => {
+                    if (!isQuestionInSyllabus(topicId, sectionId, q)) return;
+                    const rec = store.answers[qKey(topicId, sectionId, q)];
+                    if (rec && rec.c === false) wrong.push({ q, topicId, sectionId, section });
+                });
+            });
+        });
+        return wrong;
+    }
+
     // DOM Elements
     const startScreen = document.getElementById('start-screen');
     const quizInterface = document.getElementById('quiz-interface');
@@ -81,6 +130,54 @@
 
             topicSelector.appendChild(btn);
         });
+
+        updateReviewButton();
+    }
+
+    // ── Review-mistakes mode ──
+    let reviewBtn = null;
+
+    function updateReviewButton() {
+        const n = collectWrongQuestions().length;
+        if (!reviewBtn) {
+            if (!startBtn || !startBtn.parentNode) return;
+            reviewBtn = document.createElement('button');
+            reviewBtn.id = 'review-btn';
+            reviewBtn.className = startBtn.className;
+            reviewBtn.style.marginTop = '10px';
+            reviewBtn.style.background = 'transparent';
+            reviewBtn.style.border = '1px solid var(--orange)';
+            reviewBtn.style.color = 'var(--orange)';
+            reviewBtn.onclick = startReviewQuiz;
+            startBtn.parentNode.insertBefore(reviewBtn, startBtn.nextSibling);
+        }
+        reviewBtn.textContent = '🔁 Επανάλαβε τα λάθη σου (' + n + ')';
+        reviewBtn.style.display = n ? '' : 'none';
+    }
+
+    function startReviewQuiz() {
+        const wrong = collectWrongQuestions();
+        if (!wrong.length) return;
+        quizQuestions = wrong.map(w => ({
+            ...w.q,
+            topicId: w.topicId,
+            sectionId: w.sectionId,
+            topicName: w.section.title,
+            shuffledOptions: shuffle([...w.q.options]),
+            userAnswer: null,
+            answered: false
+        }));
+        shuffle(quizQuestions);
+        currentQuestionIndex = 0;
+        score = 0;
+        isListMode = false;
+
+        startScreen.style.display = 'none';
+        resultsScreen.style.display = 'none';
+        quizInterface.style.display = 'block';
+
+        renderAllQuestions();
+        updateView();
     }
 
     // Shuffle Array
@@ -103,6 +200,8 @@
                         if (!isQuestionInSyllabus(topicId, sectionId, q)) return;
                         quizQuestions.push({
                             ...q,
+                            topicId: topicId,
+                            sectionId: sectionId,
                             topicName: section.title,
                             shuffledOptions: shuffle([...q.options]),
                             userAnswer: null,
@@ -232,6 +331,12 @@
 
         if (selectedOpt.correct) score++;
 
+        // Persist the result (review mode + hub progress tags)
+        if (q.topicId && q.sectionId) {
+            store.answers[qKey(q.topicId, q.sectionId, q)] = { c: !!selectedOpt.correct, ts: Date.now() };
+            saveStore(store);
+        }
+
         // Update UI for this block
         const buttons = block.querySelectorAll('.option-btn');
         buttons.forEach((btn, i) => {
@@ -338,6 +443,7 @@
     restartBtn.onclick = () => {
         startScreen.style.display = 'block';
         resultsScreen.style.display = 'none';
+        updateReviewButton();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 

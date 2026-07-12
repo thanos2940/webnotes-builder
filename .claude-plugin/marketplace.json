@@ -1,0 +1,13 @@
+{
+  "name": "webnotes-builder",
+  "owner": {
+    "name": "thanos2940"
+  },
+  "plugins": [
+    {
+      "name": "webnotes-builder",
+      "source": "./",
+      "description": "Turns course material (PDF slides, markdown, past exams) into an interactive HTML study site. PASS mode mines past-exam patterns and builds a model-answers exam-prep page; MASTER mode covers all material with full fidelity."
+    }
+  ]
+}

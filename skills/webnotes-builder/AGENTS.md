@@ -1,6 +1,9 @@
 # Agent Instructions — Webnotes Builder
 
-> Universal entry point for AI agents that don't natively follow the Gemini Skills format (Antigravity, Cursor, generic chat agents). The full skill specification lives in `SKILL.md` (which uses the Agent Skills YAML frontmatter format).
+> Universal entry point for AI agents. Antigravity, Antigravity CLI, and Claude Code
+> discover `SKILL.md` natively (Agent Skills format) — this file also works as the
+> workspace-root `AGENTS.md` context file that Antigravity reads. For agents without
+> native skill support (Cursor, generic chat agents), point them here first.
 
 ## TL;DR
 

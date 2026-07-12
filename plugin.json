@@ -1,0 +1,7 @@
+{
+  "name": "webnotes-builder",
+  "version": "2.0.0",
+  "description": "Converts course material (PDF slides, markdown, txt, images, past exams, assignments) into a complete interactive HTML study site. Two goal modes: PASS (mines past-exam patterns, builds an exam-prep page with model answers as the centerpiece, teaches only what's needed to pass) and MASTER (full-fidelity beginner-friendly coverage of all material). Includes content-fidelity guarantees, a chunked multi-session workflow with state persistence, and exam-miner / chapter-writer / reviewer subagents.",
+  "skills": ["skills/webnotes-builder/SKILL.md"],
+  "rules": ["rules/webnotes-conventions.md"]
+}

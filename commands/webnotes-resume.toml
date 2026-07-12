@@ -1,27 +1,9 @@
-description = "Resume the webnotes build — read STATE.md and continue with the next pending action."
+description = "Resume the webnotes build from _build/STATE.md"
 
 prompt = """
-Resume the webnotes build for this course directory.
+Execute the canonical workflow file workflows/resume.md from the webnotes-builder
+extension root (find it via /extensions list - typically
+~/.gemini/extensions/webnotes-builder/workflows/resume.md).
 
-Steps:
-
-1. Read `_build/STATE.md` to determine current progress.
-   - If STATE.md does NOT exist, the user is starting fresh — run `/webnotes-start` instead.
-
-2. Read skills/webnotes-builder/SKILL.md and skills/webnotes-builder/references/09-chunked-execution.md.
-
-3. Identify the "Next action" from STATE.md.
-
-4. Tell the user:
-   - What phase/chapter you're on
-   - What the next action is (e.g. "outline chapter 3", "reviewer pass on chapter 2")
-   - Estimated time
-
-5. Ask: "Should I proceed with this action?"
-
-6. On confirmation, execute exactly that next action. Update STATE.md when done.
-
-7. After completing the action, tell the user what to ask next.
-
-DO NOT skip ahead or batch multiple actions — one work item per session keeps quality high.
+Read it fully and follow it exactly.
 """

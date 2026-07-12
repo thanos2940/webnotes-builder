@@ -5,10 +5,13 @@ assignments) into a beautifully designed, interactive HTML study site — built 
 student can study **from the site instead of the professor's notes**.
 
 Works natively as:
+- 🟢 **Antigravity plugin** (CLI `agy` + Antigravity 2.0 IDE) — skill + role subagents
+  (root `plugin.json`, `skills/`, `agents/`)
 - 🟣 **Claude Code plugin** — slash commands + role subagents (`.claude-plugin/`)
-- 🟢 **Gemini CLI extension** — slash commands + auto-loaded context (`gemini-extension.json`)
-- 🔵 **Standalone Agent Skill** — Antigravity, Cursor, Claude Desktop, OpenAI Assistants
+- 🔵 **Standalone Agent Skill** — Cursor, Claude Desktop, OpenAI Assistants
   (`skills/webnotes-builder/SKILL.md`), or **any local LLM** via `PROMPT.md`
+- ⚪ **Legacy Gemini CLI extension** (`gemini-extension.json` + TOML commands — Gemini
+  CLI was sunset for most users on 2026-06-18; kept for Code Assist Standard/Enterprise)
 
 Built on the [Agent Skills](https://agentskills.io) open standard.
 
@@ -61,6 +64,19 @@ operators, the output documents all 23 — never silently summarized down to "th
 
 ## 🚀 Install
 
+### Antigravity CLI (`agy`)
+
+```bash
+agy plugin install https://github.com/thanos2940/webnotes-builder.git
+# or a local clone:   agy plugin install ./webnotes-builder
+# validate in dev:    agy plugin validate ./webnotes-builder
+```
+
+Then just describe the goal in natural language («φτιάξε σημειώσεις από τα PDF») —
+skill selection is automatic; phases are invoked conversationally and the reviewer runs
+via `In a subagent: use webnotes-reviewer …`. Migrating an old Gemini CLI setup:
+`agy plugin import gemini`.
+
 ### Claude Code (plugin)
 
 ```bash
@@ -70,7 +86,7 @@ claude
 # or for a local clone:  claude --plugin-dir ./webnotes-builder
 ```
 
-### Gemini CLI (extension)
+### Gemini CLI (legacy — Code Assist Standard/Enterprise only)
 
 ```bash
 gemini extensions install https://github.com/thanos2940/webnotes-builder
@@ -85,7 +101,11 @@ Drop the `webnotes-builder/` folder into your course directory and point the age
 
 ---
 
-## 🧭 Slash commands (Claude Code `.md` + Gemini `.toml`, same names)
+## 🧭 Slash commands (Claude Code `.md` + legacy Gemini `.toml`, same names)
+
+> Antigravity has no per-phase slash commands — invoke the phases in natural language
+> («ξεκίνα discovery», «κάνε exam mining», «reviewer pass στο κεφάλαιο 3»); the skill
+> routes them. The table below applies to Claude Code and legacy Gemini CLI.
 
 | Command | What it does |
 |---|---|
@@ -125,9 +145,10 @@ paste-able role prompts everywhere else):
   patches omissions objectively
 
 Platform mapping, parallelism and file-ownership rules:
-`skills/webnotes-builder/references/13-orchestration.md`. On session-based platforms
-(Gemini, chat apps) the same roles map to separate sessions — the isolation of the
-reviewer is what catches omissions.
+`skills/webnotes-builder/references/13-orchestration.md`. On Antigravity, delegate with
+the native syntax — `In a subagent: use webnotes-reviewer …`. On session-based
+platforms (legacy Gemini CLI, chat apps) the same roles map to separate sessions — the
+isolation of the reviewer is what catches omissions.
 
 ---
 
@@ -135,16 +156,19 @@ reviewer is what catches omissions.
 
 ```
 webnotes-builder/
+├── plugin.json                          ← Antigravity plugin manifest (CLI + IDE)
 ├── .claude-plugin/plugin.json           ← Claude Code plugin manifest
-├── gemini-extension.json                ← Gemini CLI extension manifest
-├── GEMINI.md                            ← auto-loaded context primer (Gemini)
+├── gemini-extension.json                ← legacy Gemini CLI extension manifest
+├── GEMINI.md                            ← context primer (read by Antigravity CLI & legacy Gemini)
 ├── PROMPT.md                            ← universal bootstrap (local LLMs / any agent)
 ├── AGENT_INTEGRATION.md                 ← per-platform setup
-├── agents/                              ← role subagents (Claude Code + paste-able)
+├── agents/                              ← role subagents (Antigravity + Claude Code + paste-able)
 │   ├── webnotes-exam-miner.md
 │   ├── webnotes-chapter-writer.md
 │   └── webnotes-reviewer.md
-├── commands/                            ← slash commands: *.md (Claude) + *.toml (Gemini)
+├── workflows/                           ← CANONICAL phase instructions (single source of truth)
+├── commands/                            ← thin wrappers → workflows/: *.md (Claude) + *.toml (legacy Gemini)
+├── rules/                               ← always-on conventions (Antigravity rules)
 ├── skills/
 │   └── webnotes-builder/
 │       ├── SKILL.md                     ← the full skill spec
@@ -165,7 +189,8 @@ webnotes-builder/
 │           ├── styles/{base,layout,components,quiz}.css
 │           ├── js/{nav,quiz-loader,interactive_quiz,flashcards}.js
 │           └── data/{questions,flashcards}.js
-└── scripts/                             ← new-state.sh · verify-fidelity.sh
+└── scripts/                             ← qa-site.mjs (mechanical QA) · make-offline.mjs
+                                           (vendor MathJax/fonts) · new-state.sh · verify-fidelity.sh
 ```
 
 ## 🎯 Output in your course directory
@@ -196,7 +221,13 @@ Preview: `npx serve .` → http://localhost:3000
 - Unique accent color per chapter · dark/light themes · mobile responsive
 
 Cross-chapter quiz aggregates all questions (PASS mode: filtered by the
-`window.quizSyllabus` whitelist). Flashcards workspace aggregates theory Q&A.
+`window.quizSyllabus` whitelist), **remembers your answers** (localStorage), offers a
+«🔁 Επανάλαβε τα λάθη σου» review mode, and shows per-chapter accuracy tags on the hub.
+Flashcards workspace aggregates theory Q&A. PASS mode adds a printable **Cram Sheet**.
+
+Tooling: `node scripts/qa-site.mjs` (from the course root) mechanically verifies quiz
+wiring, anchors, links and ids; `node scripts/make-offline.mjs` vendors MathJax + fonts
+into `vendor/` so the site works without internet.
 
 ---
 
